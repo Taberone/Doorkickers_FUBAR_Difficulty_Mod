@@ -1,0 +1,43 @@
+<!-- INSTANT DEATH unless wearing Body Armor (Second Chance) -->
+<DamageTable>
+	<DamageReceived value="1" noResultPercent="0" injuryPercent="100" killPercent="0"/>
+	<DamageReceived value="2" noResultPercent="0" injuryPercent="100" killPercent="0"/>
+	<DamageReceived value="3" noResultPercent="0" injuryPercent="100" killPercent="0"/>
+	<DamageReceived value="4" noResultPercent="0" injuryPercent="100" killPercent="0"/>
+	<DamageReceived value="5" noResultPercent="0" injuryPercent="100" killPercent="0"/>
+	<DamageReceived value="6" noResultPercent="0" injuryPercent="100" killPercent="0"/>
+	<DamageReceived value="7" noResultPercent="0" injuryPercent="100" killPercent="0"/>
+	<DamageReceived value="8" noResultPercent="0" injuryPercent="0" killPercent="100"/>
+	<DamageReceived value="9" noResultPercent="0" injuryPercent="0" killPercent="100"/>
+	<DamageReceived value="10" noResultPercent="0" injuryPercent="0" killPercent="100"/>
+	<DamageReceived value="11" noResultPercent="0" injuryPercent="0" killPercent="100"/>
+	<DamageReceived value="12" noResultPercent="0" injuryPercent="0" killPercent="100"/>
+	<DamageReceived value="13" noResultPercent="0" injuryPercent="0" killPercent="100"/>
+	<DamageReceived value="14" noResultPercent="0" injuryPercent="0" killPercent="100"/>
+</DamageTable>
+
+<!-- <DamageTable>
+	<DamageReceived value="1" noResultPercent="90" injuryPercent="10" killPercent="0"/>
+	<DamageReceived value="2" noResultPercent="90" injuryPercent="10" killPercent="0"/>
+	<DamageReceived value="3" noResultPercent="90" injuryPercent="10" killPercent="0"/>
+	<DamageReceived value="4" noResultPercent="90" injuryPercent="10" killPercent="0"/>
+	<DamageReceived value="5" noResultPercent="90" injuryPercent="10" killPercent="0"/>
+	<DamageReceived value="6" noResultPercent="80" injuryPercent="19" killPercent="1"/>
+	<DamageReceived value="7" noResultPercent="30" injuryPercent="70" killPercent="0"/>
+	<DamageReceived value="8" noResultPercent="20" injuryPercent="80" killPercent="0"/>
+	<DamageReceived value="9" noResultPercent="10" injuryPercent="80" killPercent="10"/>
+	<DamageReceived value="10" noResultPercent="0" injuryPercent="67" killPercent="33"/>
+	<DamageReceived value="11" noResultPercent="0" injuryPercent="55" killPercent="45"/>
+	<DamageReceived value="12" noResultPercent="0" injuryPercent="45" killPercent="55"/>
+	<DamageReceived value="13" noResultPercent="0" injuryPercent="35" killPercent="65"/>
+	<DamageReceived value="14" noResultPercent="0" injuryPercent="0" killPercent="100"/>
+</DamageTable> -->
+
+<!-- DamageTable>
+	<DamageReceived value="1" noResultPercent="30" injuryPercent="70" killPercent="5"/>
+	<DamageReceived value="2" noResultPercent="2" injuryPercent="68" killPercent="30"/>
+	<DamageReceived value="3" noResultPercent="0" injuryPercent="55" killPercent="45"/>
+	<DamageReceived value="4" noResultPercent="0" injuryPercent="45" killPercent="55"/>
+	<DamageReceived value="5" noResultPercent="0" injuryPercent="35" killPercent="65"/>
+	<DamageReceived value="6" noResultPercent="0" injuryPercent="0" killPercent="100"/>
+</DamageTable-->

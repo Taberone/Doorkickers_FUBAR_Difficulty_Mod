@@ -1,0 +1,3352 @@
+<EventActionBatch name="GAME_GUI_OPEN_MAIN_MENU">
+	<GUIAction type="Show" target="Menu_Main"/>
+</EventActionBatch>
+
+<EventActionBatch name="GAME_GUI_HIDE_MAIN_MENU">
+	<GUIAction type="Hide" target="Menu_Main"/>
+</EventActionBatch>
+
+<!-- hides all contextual menus, if any were open. called before a game starts -->
+<EventActionBatch name="GAME_GUI_HIDE_CONTEXTUAL_MENUS">
+	<GUIAction type="Hide" target="ContextMenu_UnlockedDoor"/>
+	<GUIAction type="Hide" target="ContextMenu_LockedDoor"/>
+	<GUIAction type="Hide" target="ContextMenu_PlayerUnit"/>
+	<GUIAction type="Hide" target="ContextMenu_Hostage"/>
+	<GUIAction type="Hide" target="ContextMenu_Timebomb"/>
+</EventActionBatch>
+
+<EventActionBatch name="GAME_GUI_SHOW_VICTORY_DETAILED_STATS">
+	<GUIAction type="TriggerEvent" target="GUI_GAME_DETAILED_STATS"/>
+	<GUIAction type="Show" target="DetailedStatistics_Victory"/>
+</EventActionBatch>
+
+<EventActionBatch name="GAME_GUI_SHOW_LOSS_DETAILED_STATS">
+	<GUIAction type="TriggerEvent" target="GUI_GAME_DETAILED_STATS"/>
+	<GUIAction type="Show" target="DetailedStatistics_Loss"/>
+</EventActionBatch>
+
+<EventActionBatch name="GAME_GUI_SETUP_MENUS_NORESTART">
+	<GUIAction type="Show" target="Menu_InGame_RestartLevel_Disabled"/>
+	<GUIAction type="Hide" target="Menu_InGame_RestartLevel_Enabled"/>
+
+	<GUIAction type="Show" target="Menu_MissionLost_RestartLevel_Disabled"/>
+	<GUIAction type="Hide" target="Menu_MissionLost_RestartLevel_Enabled"/>
+
+	<GUIAction type="Show" target="Menu_MissionVictory_RestartLevel_Disabled"/>
+	<GUIAction type="Hide" target="Menu_MissionVictory_RestartLevel_Enabled"/>
+</EventActionBatch>
+
+<EventActionBatch name="GAME_GUI_SETUP_MENUS_ALLOW_RESTART">
+	<GUIAction type="Hide" target="Menu_InGame_RestartLevel_Disabled"/>
+	<GUIAction type="Show" target="Menu_InGame_RestartLevel_Enabled"/>
+
+	<GUIAction type="Hide" target="Menu_MissionLost_RestartLevel_Disabled"/>
+	<GUIAction type="Show" target="Menu_MissionLost_RestartLevel_Enabled"/>
+
+	<GUIAction type="Hide" target="Menu_MissionVictory_RestartLevel_Disabled"/>
+	<GUIAction type="Show" target="Menu_MissionVictory_RestartLevel_Enabled"/>
+</EventActionBatch>
+
+<EventActionBatch name="GAME_GUI_SETUP_ENDSCREEN_REPLAY">
+	<GUIAction type="Hide" target="#MissionVictory_Button_Continue"/>
+	<GUIAction type="Hide" target="#MissionLost_Button_Continue"/>
+	<GUIAction type="Hide" target="Menu_MissionVictory_RestartLevel_Enabled"/>
+	<GUIAction type="Hide" target="Menu_MissionVictory_RestartLevel_Disabled"/>
+	<GUIAction type="Hide" target="Menu_MissionLost_RestartLevel_Enabled"/>
+	<GUIAction type="Hide" target="Menu_MissionLost_RestartLevel_Disabled"/>
+</EventActionBatch>
+
+<EventActionBatch name="GAME_GUI_SETUP_ENDSCREEN_NORMAL">
+	<GUIAction type="Show" target="#MissionVictory_Button_Continue"/>
+	<GUIAction type="Show" target="#MissionLost_Button_Continue"/>
+	<!-- these are shown by the subsequent GAME_GUI_SETUP_MENUS_ALLOW_RESTART/DISALLOW messages
+	<GUIAction type="Show" target="Menu_MissionVictory_RestartLevel_Enabled"/>
+	<GUIAction type="Show" target="Menu_MissionVictory_RestartLevel_Disabled"/>
+	<GUIAction type="Show" target="Menu_MissionLost_RestartLevel_Enabled"/>
+	<GUIAction type="Show" target="Menu_MissionLost_RestartLevel_Disabled"/>
+	-->
+</EventActionBatch>
+
+<EventActionBatch name="GAME_GUI_SHOW_REPLAY_UTILS">
+	<GUIAction type="Show" target="#MissionVictory_ReplayUtils"/>
+	<GUIAction type="Show" target="#MissionLost_ReplayUtils"/>
+</EventActionBatch>
+
+<EventActionBatch name="GAME_GUI_HIDE_REPLAY_UTILS">
+	<GUIAction type="Hide" target="#MissionVictory_ReplayUtils"/>
+	<GUIAction type="Hide" target="#MissionLost_ReplayUtils"/>
+</EventActionBatch>
+
+<!-- ///////////////////////////////////////////////////////////////////////////////////// -->
+<!-- ///////////////////////////////////////////////////////////////////////////////////// -->
+<!-- ///////////////////////////////////////////////////////////////////////////////////// -->
+
+<!-- Helpers -->
+<Item name="DetailedStatistics_Victory" hidden="true">
+	<OnOpen>
+		<GUIAction type="Show" target="DetailedStatistics"/>
+	</OnOpen>
+
+	<OnClose>
+		<GUIAction type="Hide" target="DetailedStatistics"/>
+		<GUIAction type="Show" target="MissionVictory"/>
+	</OnClose>
+</Item>
+
+<Item name="DetailedStatistics_Loss" hidden="true">
+	<OnOpen>
+		<GUIAction type="Show" target="DetailedStatistics"/>
+	</OnOpen>
+
+	<OnClose>
+		<GUIAction type="Hide" target="DetailedStatistics"/>
+		<GUIAction type="Show" target="MissionLost"/>
+	</OnClose>
+</Item>
+
+<Item name="DetailedStatistics_Briefing" hidden="true">
+	<OnOpen>
+		<GUIAction type="Show" target="DetailedStatistics"/>
+	</OnOpen>
+
+	<OnClose>
+		<GUIAction type="Hide" target="DetailedStatistics"/>
+	</OnClose>
+</Item>
+
+<Item name="DetailedStatistics_MissionSelect" hidden="true">
+	<OnOpen>
+		<GUIAction type="Show" target="DetailedStatistics"/>
+	</OnOpen>
+
+	<OnClose>
+		<GUIAction type="Hide" target="DetailedStatistics"/>
+	</OnClose>
+</Item>
+<!-- END Helpers -->
+
+<Item name="DetailedStatistics" origin="960 540" hidden="true">
+	<OnOpen>
+		<GUIAction type="TriggerEvent" target="GUI_CAPTURE_INPUT"/>
+		<GUIAction type="SetForeground" target="DetailedStatistics"/>
+	</OnOpen>
+
+	<OnClose>
+		<GUIAction type="TriggerEvent" target="GUI_RELEASE_INPUT"/>
+	</OnClose>
+
+	<OnKeyDown rangeStart="0x1B" rangeEnd="0x1B">
+		<GUIAction type="Click" target="DetailedStatistics_Close"/>
+	</OnKeyDown>
+
+	<StaticImage origin="0 0" sizeX="1" sizeY="1">
+		<RenderObject2D texture="data/textures/gui/menus/menu_pause_black.tga" sizeX="1920" sizeY="1080"/>
+	</StaticImage>
+
+	<StaticText origin="-450 460" text="Mission Statistics" font="data/textures/fonts/generic_normal_38" textColor="ffbb9f7d"/>
+
+	<!-- mission info panel -->
+	<StaticImage name="MissionInfoPanel" origin="0 280">
+		<RenderObject2D texture="data/textures/gui/menus/stats/menu_ms_topcase.tga"/>
+
+		<StaticImage name="MissionIcon_Background" origin="-460 0">
+			<RenderObject2D texture="data/textures/gui/menus/menu_mission_thumb_background.tga" sizeX="470" sizeY="316"/>
+		</StaticImage>
+
+		<!-- this is changed dynamically by the game with the thumbnail for each level -->
+		<StaticImage name="MissionBriefingImage" origin="-460 0">
+			<RenderObject2D texture="data/textures/background/killhouse1r1d_thumb.dds" scaleX="0.71" scaleY="0.71"/>
+		</StaticImage>
+
+		<Item origin="-210 0">
+			<StaticText name="MissionName_Text" origin="0 125" alignH="left" text="LevelName" font="data/textures/fonts/generic_normal_38" textColor="ffc5c2a8"/>
+
+			<!-- these will be modified by the game dynamically -->
+			<StaticText name="MissionStatus_Outcome" origin="0 75" alignH="left" text="Outcome" font="data/textures/fonts/generic_normal_38" textColor="ffbb9f7d"/>
+
+			<StaticImage name="MissionStatus_3Stars" origin="90 20" hidden="true">
+				<RenderObject2D texture="data/textures/gui/menus/menu_star_big3.tga"/>
+			</StaticImage>
+			<StaticImage name="MissionStatus_2Stars" origin="90 20" hidden="true">
+				<RenderObject2D texture="data/textures/gui/menus/menu_star_big2.tga"/>
+			</StaticImage>
+			<StaticImage name="MissionStatus_1Star" origin="90 20" hidden="true">
+				<RenderObject2D texture="data/textures/gui/menus/menu_star_big1.tga"/>
+			</StaticImage>
+			<StaticImage name="MissionStatus_0Stars" origin="90 20" hidden="true">
+				<RenderObject2D texture="data/textures/gui/menus/menu_star_big0.tga"/>
+			</StaticImage>
+
+			<StaticImage origin="202 20">
+				<RenderObject2D texture="data/textures/gui/menus/challenges/v_line.tga"/>
+
+				<StaticImage origin="30 0" tooltip="Challenge: use only one trooper" stealFocus="true">
+					<RenderObject2D texture="data/textures/gui/menus/challenges/oneman_grey.tga"/>
+					<StaticImage name="MissionChallenges_OneMan" hidden="true">
+						<RenderObject2D texture="data/textures/gui/menus/challenges/oneman.tga"/>
+					</StaticImage>
+				</StaticImage>
+				<StaticImage origin="70 0" tooltip="Challenge: complete mission without pausing, in real-time" stealFocus="true">
+					<RenderObject2D texture="data/textures/gui/menus/challenges/nopause_grey.tga"/>
+					<StaticImage name="MissionChallenges_NoPause" hidden="true">
+						<RenderObject2D texture="data/textures/gui/menus/challenges/nopause.tga"/>
+					</StaticImage>
+				</StaticImage>
+				<StaticImage origin="110 0" tooltip="Challenge: use a single plan to complete the mission" stealFocus="true">
+					<RenderObject2D texture="data/textures/gui/menus/challenges/oneplan_grey.tga"/>
+					<StaticImage name="MissionChallenges_OnePlan" hidden="true">
+						<RenderObject2D texture="data/textures/gui/menus/challenges/oneplan.tga"/>
+					</StaticImage>
+				</StaticImage>
+				<!--
+				<StaticImage origin="150 0" tooltip="Challenge: complete mission without being detected" stealFocus="true">
+					<RenderObject2D texture="data/textures/gui/menus/challenges/stealth_grey.tga"/>
+					<StaticImage name="MissionChallenges_Stealth" hidden="true">
+						<RenderObject2D texture="data/textures/gui/menus/challenges/stealth.tga"/>
+					</StaticImage>
+				</StaticImage>
+				-->
+			</StaticImage>
+
+			<StaticImage name="ImprovedResult" origin="570 20" hidden="true" sizeX="1" sizeY="1">
+				<RenderObject2D texture="data/textures/gui/menus/stats/menu_ms_improved.tga"/>
+			</StaticImage>
+
+			<Item origin="0 -45">
+				<StaticText name=""							 		origin="0 0" alignH="left" text="Elapsed time" font="data/textures/fonts/generic_normal_38" textColor="ffbb9f7d"/>
+				<StaticText name="MissionStatus_ElapsedTime" 		origin="200 0" alignH="left" text="00:30" font="data/textures/fonts/generic_normal_38" textColor="ff40c68a"/>
+				<StaticText name="" 								origin="0 -35" alignH="left" text="SWAT casualties" font="data/textures/fonts/generic_normal_25" textColor="ffbb9f7d"/>
+				<StaticText name="MissionStatus_SWATCasualties" 	origin="200 -35" alignH="left" text="0/4" font="data/textures/fonts/generic_normal_25" textColor="ff40c68a"/>
+				<StaticText name=""								 	origin="0 -60" alignH="left" text="Hostiles pacified" font="data/textures/fonts/generic_normal_25" textColor="ffbb9f7d"/>
+				<StaticText name="MissionStatus_HostilesPacified"	origin="200 -60" alignH="left" text="6/6" font="data/textures/fonts/generic_normal_25" textColor="ff40c68a"/>
+				<StaticText name=""							 		origin="0 -85" alignH="left" text="Total XP" font="data/textures/fonts/generic_normal_25" textColor="ffbb9f7d"/>
+				<StaticText name="MissionStatus_GainedXP"		 	origin="200 -85" alignH="left" text="235" font="data/textures/fonts/generic_normal_25" textColor="ff40c68a"/>
+			</Item>
+		</Item>
+	</StaticImage>
+
+	<!-- detailed stats panel -->
+	<StaticImage name="DetailedStatsPanel" origin="0 -190">
+		<RenderObject2D texture="data/textures/gui/menus/stats/menu_ms_downcase.tga"/>
+
+		<StaticImage origin="0 -232">
+			<RenderObject2D texture="data/textures/gui/menus/stats/menu_ms_line_h_buttons.tga"/>
+		</StaticImage>
+		<!--
+		<Button origin="-100 -256">
+			<RenderObject2D texture="data/textures/gui/menus/stats/menu_ms_tab_normal.tga"/>
+			<ButtonText origin="0 -5" text="Mission" font="data/textures/fonts/generic_normal_25" textColor="ffbb9f7d"/>
+
+			<OnHover>
+				<RenderObject2D texture="data/textures/gui/menus/stats/menu_ms_tab_hover.tga"/>
+				<ButtonText origin="0 -5" text="Mission" font="data/textures/fonts/generic_normal_25" textColor="ffbb9f7d"/>
+			</OnHover>
+
+			<OnClick>
+				<RenderObject2D texture="data/textures/gui/menus/stats/menu_ms_tab_normal.tga"/>
+				<ButtonText origin="0 -5" text="Mission" font="data/textures/fonts/generic_normal_25" textColor="ffbb9f7d"/>
+			</OnClick>
+		</Button>
+
+		<StaticImage origin="100 -256">
+			<RenderObject2D texture="data/textures/gui/menus/stats/menu_ms_tab_disable.tga"/>
+			<StaticText origin="0 -5" text="Overall" font="data/textures/fonts/generic_normal_25" textColor="ff404040"/>
+		</StaticImage>
+		-->
+		<StaticImage origin="0 219">
+			<RenderObject2D texture="data/textures/gui/menus/stats/menu_ms_line_h.tga"/>
+		</StaticImage>
+
+ 		<StaticImage origin="0 -221">
+			<RenderObject2D texture="data/textures/gui/menus/stats/menu_ms_line_h.tga"/>
+		</StaticImage>
+
+		<!-- one statistics row. this will be duplicated inside the game and added dynamically depending on the number of troopers -->
+		<Item>
+			<Item name="StatsLine1" origin="0 191" sizeX="1" sizeY="55"> <!-- sizeX is not important, but we need custom sizeY so that we know how much lower we need to put the next row -->
+				<StaticImage name="StatsLine_Background">
+					<RenderObject2D texture="data/textures/gui/menus/stats/menu_ms_line_h2.tga"/>
+				</StaticImage>
+
+				<StaticImage name="StatsLine_BackgroundRed">
+					<RenderObject2D texture="data/textures/gui/menus/stats/menu_ms_line_hred.tga"/>
+				</StaticImage>
+
+				<StaticImage origin="0 -28">
+					<RenderObject2D texture="data/textures/gui/menus/stats/menu_ms_line_h.tga"/>
+				</StaticImage>
+
+				<Item origin="-185 0">
+					<StaticImage origin="-430 0">
+						<RenderObject2D texture="data/textures/gui/menus/stats/portrait_case.tga" scaleX="0.77" scaleY="0.77"/>
+
+						<StaticImage name="#Portrait">
+							<RenderObject2D texture="data/textures/gui/customization/portraits/alexene_crop.tga" scaleX="0.77" scaleY="0.77"/>
+						</StaticImage>
+
+						<StaticImage name="#Promoted" origin="-35 10">
+							<RenderObject2D texture="data/textures/gui/menus/stats/promoted.tga"/>
+						</StaticImage>
+					</StaticImage>
+					<StaticImage name="#Rank" origin="-417 -13">
+						<RenderObject2D texture="data/textures/gui/rank_icons/menu_icon_ranksmall_02.tga"/>
+					</StaticImage>
+					<StaticText name="#Name" origin="-390 0" text="B. Petrica Blabla" font="data/textures/fonts/generic_normal_25" textColor="ffbb9f7d" alignH="left"/>
+					<StaticImage name="#Weapon_Pistol" origin="-70 0" hidden="true">
+						<RenderObject2D texture="data/textures/gui/hud/hud_tooltip_pistol.tga"/>
+					</StaticImage>
+					<StaticImage name="#Weapon_Rifle" origin="-70 0" hidden="true">
+						<RenderObject2D texture="data/textures/gui/hud/hud_tooltip_rifle.tga"/>
+					</StaticImage>
+					<StaticText name="#Kills" 			origin="0 0" text="43" font="data/textures/fonts/generic_normal_25" textColor="ffA8A8A8"/>
+					<StaticText name="#Shots" 			origin="90 0" text="43" font="data/textures/fonts/generic_normal_25" textColor="ffA8A8A8"/>
+					<StaticText name="#Accuracy" 		origin="180 0" text="43" font="data/textures/fonts/generic_normal_25" textColor="ffA8A8A8"/>
+					<StaticText name="#Injuries" 		origin="270 0" text="43" font="data/textures/fonts/generic_normal_25" textColor="ffA8A8A8"/>
+					<StaticText name="#Grenades" 		origin="360 0" text="43" font="data/textures/fonts/generic_normal_25" textColor="ffA8A8A8"/>
+					<StaticText name="#DoorsBreached" 	origin="450 0" text="43" font="data/textures/fonts/generic_normal_25" textColor="ffA8A8A8"/>
+					<StaticText name="#Arrests" 		origin="540 0" text="10" font="data/textures/fonts/generic_normal_25" textColor="ffA8A8A8"/>
+					<StaticText name="#Stats" 			origin="630 0" text="INJURED" font="data/textures/fonts/generic_normal_25" textColor="ff0123f2"/>
+					<StaticText name="#XP" 				origin="720 0" text="+3500 XP" font="data/textures/fonts/generic_normal_25" textColor="ff40c68a"/>
+				</Item>
+			</Item>
+		</Item>
+
+		<!-- vertical lines and icons -->
+		<Item origin="-230 60">
+			<Item origin="45 200">
+				<StaticImage origin="0 0" tooltip="Kills">
+					<RenderObject2D texture="data/textures/gui/menus/stats/menu_ms_kills.tga"/>
+				</StaticImage>
+
+				<StaticImage origin="90 0" tooltip="Shots fired">
+					<RenderObject2D texture="data/textures/gui/menus/stats/menu_ms_shots.tga"/>
+				</StaticImage>
+
+				<StaticImage origin="180 0" tooltip="Accuracy">
+					<RenderObject2D texture="data/textures/gui/menus/stats/menu_ms_accuracy.tga"/>
+				</StaticImage>
+
+				<StaticImage origin="270 0" tooltip="Hits taken">
+					<RenderObject2D texture="data/textures/gui/menus/stats/menu_ms_hits.tga"/>
+				</StaticImage>
+
+				<StaticImage origin="360 0" tooltip="Grenades used">
+					<RenderObject2D texture="data/textures/gui/menus/stats/menu_ms_fbangs.tga"/>
+				</StaticImage>
+
+				<StaticImage origin="450 0" tooltip="Doors breached">
+					<RenderObject2D texture="data/textures/gui/menus/stats/menu_ms_charges.tga"/>
+				</StaticImage>
+
+				<StaticImage origin="540 0" tooltip="Arrests">
+					<RenderObject2D texture="data/textures/gui/menus/stats/menu_ms_arrest.tga"/>
+				</StaticImage>
+
+				<StaticImage origin="630 0" tooltip="Status">
+					<RenderObject2D texture="data/textures/gui/menus/stats/menu_ms_stats.tga"/>
+				</StaticImage>
+
+				<StaticImage origin="720 0" tooltip="Total XP">
+					<RenderObject2D texture="data/textures/gui/menus/stats/menu_ms_xp.tga"/>
+				</StaticImage>
+			</Item>
+
+			<Item origin="0 -7">
+				<StaticImage origin="0 0">
+					<RenderObject2D texture="data/textures/gui/menus/stats/menu_ms_line_v.tga"/>
+				</StaticImage>
+
+				<StaticImage origin="90 0">
+					<RenderObject2D texture="data/textures/gui/menus/stats/menu_ms_line_v.tga"/>
+				</StaticImage>
+
+				<StaticImage origin="180 0">
+					<RenderObject2D texture="data/textures/gui/menus/stats/menu_ms_line_v.tga"/>
+				</StaticImage>
+
+				<StaticImage origin="270 0">
+					<RenderObject2D texture="data/textures/gui/menus/stats/menu_ms_line_v.tga"/>
+				</StaticImage>
+
+				<StaticImage origin="360 0">
+					<RenderObject2D texture="data/textures/gui/menus/stats/menu_ms_line_v.tga"/>
+				</StaticImage>
+
+				<StaticImage origin="450 0">
+					<RenderObject2D texture="data/textures/gui/menus/stats/menu_ms_line_v.tga"/>
+				</StaticImage>
+
+				<StaticImage origin="540 0">
+					<RenderObject2D texture="data/textures/gui/menus/stats/menu_ms_line_v.tga"/>
+				</StaticImage>
+
+				<StaticImage origin="630 0">
+					<RenderObject2D texture="data/textures/gui/menus/stats/menu_ms_line_v.tga"/>
+				</StaticImage>
+
+				<StaticImage origin="720 0">
+					<RenderObject2D texture="data/textures/gui/menus/stats/menu_ms_line_v.tga"/>
+				</StaticImage>
+			</Item>
+		</Item>
+
+		<!--
+		<Button name="DetailedStatistics_Close" origin="590 -280" sizeX="150" sizeY="50">
+			<RenderObject2D texture="data/textures/gui/menus/menu_checkbox_x.tga"/>
+			<ButtonText origin="0 0" text="Close" alignH="right" font="data/textures/fonts/generic_normal_25" textColor="ffbb9f7d"/>
+
+			<OnHover>
+				<RenderObject2D texture="data/textures/gui/menus/menu_checkbox_x.tga"/>
+				<ButtonText origin="0 0" text="Close" alignH="right" font="data/textures/fonts/generic_normal_25" textColor="ffffffff"/>
+			</OnHover>
+
+			<OnClick>
+				<RenderObject2D texture="data/textures/gui/menus/menu_checkbox_x.tga"/>
+				<ButtonText origin="0 0" text="Close" alignH="right" font="data/textures/fonts/generic_normal_25" textColor="ffbb9f7d"/>
+				<GUIAction type="Hide" target="DetailedStatistics_Victory"/>
+				<GUIAction type="Hide" target="DetailedStatistics_Loss"/>
+				<GUIAction type="Hide" target="DetailedStatistics_Briefing"/>
+				<GUIAction type="Hide" target="DetailedStatistics_MissionSelect"/>
+			</OnClick>
+		</Button>
+		-->
+		<Button name="DetailedStatistics_Close" origin="0 -269">
+			<RenderObject2D texture="data/textures/gui/menus/menu_button02_normal.tga"/>
+			<ButtonText text="Back" font="data/textures/fonts/generic_normal_25" textColor="ffbb9f7d"/>
+			<OnHover>
+				<RenderObject2D texture="data/textures/gui/menus/menu_button02_hover.tga"/>
+				<ButtonText text="Back" font="data/textures/fonts/generic_normal_25" textColor="ffffffff"/>
+			</OnHover>
+			<OnClick>
+				<RenderObject2D texture="data/textures/gui/menus/menu_button02_normal.tga"/>
+				<ButtonText text="Back" font="data/textures/fonts/generic_normal_25" textColor="ffbb9f7d"/>
+				<GUIAction type="Hide" target="DetailedStatistics_Victory"/>
+				<GUIAction type="Hide" target="DetailedStatistics_Loss"/>
+				<GUIAction type="Hide" target="DetailedStatistics_Briefing"/>
+				<GUIAction type="Hide" target="DetailedStatistics_MissionSelect"/>
+			</OnClick>
+		</Button>
+	</StaticImage>
+</Item>
+
+<Item name="MissionVictory" origin="960 540" hidden="true">
+	<OnOpen>
+		<GUIAction type="TriggerEvent" target="GUI_CAPTURE_INPUT"/>
+		<GUIAction type="TriggerEvent" target="GUI_GAME_SETUP_MENUS_ALLOW_DISALLOW_RESTART"/> <!-- need to show/hide the restart button -->
+	</OnOpen>
+
+	<OnClose>
+		<GUIAction type="TriggerEvent" target="GUI_RELEASE_INPUT"/>
+	</OnClose>
+
+	<OnKeyDown rangeStart="0x1B" rangeEnd="0x1B">
+		<GUIAction type="Click" target="#Menu_MissionVictory_Back"/>
+	</OnKeyDown>
+
+	<StaticImage>
+		<RenderObject2D texture="data/textures/gui/menus/menu_pause_black.tga" sizeX="1920" sizeY="670"/>
+	</StaticImage>
+
+	<StaticImage origin="-348 0">
+		<RenderObject2D texture="data/textures/gui/menus/background3D/menu.dds"/>
+	</StaticImage>
+
+	<StaticImage origin="0 439">
+		<RenderObject2D texture="data/textures/gui/menus/menu_black_background.tga" sizeX="1920" sizeY="202" blendMode="none"/>
+
+		<StaticText origin="-450 -69" text="End Mission" font="data/textures/fonts/generic_normal_38" textColor="ffbb9f7d"/>
+	</StaticImage>
+
+	<StaticImage origin="0 -439">
+		<RenderObject2D texture="data/textures/gui/menus/menu_black_background.tga" sizeX="1920" sizeY="202" blendMode="none"/>
+	</StaticImage>
+
+	<Item>
+		<!-- enclose all butons in a single parent item which is centered on the background -->
+		<Item origin="-600 220">
+			<Button name="#MissionVictory_Button_Continue" origin="0 0">
+				<RenderObject2D texture="data/textures/gui/menus/menu_butt_inside_normal.tga"/>
+				<ButtonText origin="40 0" text="Continue" alignH="left" font="data/textures/fonts/generic_normal_25" textColor="ffdccfbc"/>
+				<OnHover>
+					<RenderObject2D texture="data/textures/gui/menus/menu_butt_inside_hover.tga"/>
+					<ButtonText origin="40 0" text="Continue" alignH="left" font="data/textures/fonts/generic_normal_25" textColor="ffffffff"/>
+				</OnHover>
+				<OnClick>
+					<RenderObject2D texture="data/textures/gui/menus/menu_butt_inside_normal.tga"/>
+					<GUIAction type="Hide" target="MissionVictory"/>
+					<GUIAction type="TriggerEvent" target="GUI_GAME_MISSION_CONTINUE"/>
+				</OnClick>
+			</Button>
+
+			<Button name="Menu_MissionVictory_RestartLevel_Enabled" origin="0 -70" tooltip="Restarting will reset the current result (XP/Stars).">
+				<RenderObject2D texture="data/textures/gui/menus/menu_butt_inside_normal.tga"/>
+				<ButtonText origin="40 0" text="Restart" alignH="left" font="data/textures/fonts/generic_normal_25" textColor="ffdccfbc"/>
+				<OnHover>
+					<RenderObject2D texture="data/textures/gui/menus/menu_butt_inside_hover.tga"/>
+					<ButtonText origin="40 0" text="Restart" alignH="left" font="data/textures/fonts/generic_normal_25" textColor="ffffffff"/>
+				</OnHover>
+				<OnClick>
+					<RenderObject2D texture="data/textures/gui/menus/menu_butt_inside_normal.tga"/>
+					<GUIAction type="Hide" target="MissionVictory"/>
+					<GUIAction type="TriggerEvent" target="GUI_GAME_RESTART"/>
+				</OnClick>
+			</Button>
+
+			<StaticImage name="Menu_MissionVictory_RestartLevel_Disabled" origin="0 -70" tooltip="Cannot restart while in 'Iron Man' mode" stealFocus="true">
+				<RenderObject2D texture="data/textures/gui/menus/menu_butt_inside_normal.tga"/>
+				<StaticText origin="40 0" text="Restart" alignH="left" font="data/textures/fonts/generic_normal_25" textColor="ff7f7f7f"/>
+				<StaticImage origin="-217 -5">
+					<RenderObject2D texture="data/textures/gui/customization/menu_locked.tga" scaleX="0.8" scaleY="0.8"/>
+				</StaticImage>
+			</StaticImage>
+
+			<Button name="#Menu_MissionVictory_Back" origin="0 -140">
+				<RenderObject2D texture="data/textures/gui/menus/menu_butt_inside_normal.tga"/>
+				<ButtonText origin="40 0" text="Back" alignH="left" font="data/textures/fonts/generic_normal_25" textColor="ffdccfbc"/>
+				<OnHover>
+					<RenderObject2D texture="data/textures/gui/menus/menu_butt_inside_hover.tga"/>
+					<ButtonText origin="40 0" text="Back" alignH="left" font="data/textures/fonts/generic_normal_25" textColor="ffffffff"/>
+				</OnHover>
+				<OnClick>
+					<RenderObject2D texture="data/textures/gui/menus/menu_butt_inside_normal.tga"/>
+					<GUIAction type="Hide" target="MissionVictory"/>
+					<GUIAction type="TriggerEvent" target="GAME_GUI_HIDE_HUD"/>
+					<GUIAction type="TriggerEvent" target="GUI_GAME_MISSION_ENDSCREEN_BACK"/>
+				</OnClick>
+			</Button>
+
+			<Item name="#MissionVictory_ReplayUtils">
+				<Button origin="0 -390">
+					<RenderObject2D texture="data/textures/gui/menus/menu_butt_inside_normal.tga" sizeY="50"/>
+					<ButtonText origin="40 0" text="View/save replay" alignH="left" font="data/textures/fonts/generic_normal_25" textColor="ffdccfbc"/>
+					<OnHover>
+						<RenderObject2D texture="data/textures/gui/menus/menu_butt_inside_hover.tga" sizeY="50"/>
+						<ButtonText origin="40 0" text="View/save replay" alignH="left" font="data/textures/fonts/generic_normal_25" textColor="ffffffff"/>
+					</OnHover>
+					<OnClick>
+						<RenderObject2D texture="data/textures/gui/menus/menu_butt_inside_normal.tga" sizeY="50"/>
+						<GUIAction type="Hide" target="MissionVictory"/>
+						<GUIAction type="TriggerEvent" target="GUI_GAME_VIEW_MISSION_REPLAY"/>
+					</OnClick>
+				</Button>
+
+				<Button origin="0 -440">
+					<RenderObject2D texture="data/textures/gui/menus/menu_butt_inside_normal.tga" sizeY="50"/>
+					<ButtonText origin="40 0" text="Export replay to video" alignH="left" font="data/textures/fonts/generic_normal_25" textColor="ffdccfbc"/>
+					<OnHover>
+						<RenderObject2D texture="data/textures/gui/menus/menu_butt_inside_hover.tga" sizeY="50"/>
+						<ButtonText origin="40 0" text="Export replay to video" alignH="left" font="data/textures/fonts/generic_normal_25" textColor="ffffffff"/>
+					</OnHover>
+					<OnClick>
+						<RenderObject2D texture="data/textures/gui/menus/menu_butt_inside_normal.tga" sizeY="50"/>
+						<GUIAction type="Hide" target="MissionVictory"/>
+						<GUIAction type="TriggerEvent" target="GUI_GAME_EXPORT_REPLAY_VIDEO"/>
+					</OnClick>
+				</Button>
+			</Item>
+		</Item>
+
+		<Item>
+			<StaticImage origin="0 0">
+				<RenderObject2D texture="data/textures/gui/menus/menu_mission_win_line.tga"/>
+			</StaticImage>
+
+			<StaticText name="MissionStatus_Text" origin="30 125" alignH="left" text="MISSION COMPLETED" font="data/textures/fonts/generic_normal_57" textColor="ffbb9f7d"/>
+
+			<!-- these will be modified by the game dynamically -->
+			<StaticText name="MissionStatus_Outcome" origin="30 75" alignH="left" text="" font="data/textures/fonts/generic_normal_38" textColor="ff40c68a"/>
+
+			<StaticImage name="MissionStatus_3Stars" origin="120 20" hidden="true">
+				<RenderObject2D texture="data/textures/gui/menus/menu_star_big3.tga"/>
+			</StaticImage>
+			<StaticImage name="MissionStatus_2Stars" origin="120 20" hidden="true">
+				<RenderObject2D texture="data/textures/gui/menus/menu_star_big2.tga"/>
+			</StaticImage>
+			<StaticImage name="MissionStatus_1Star" origin="120 20" hidden="true">
+				<RenderObject2D texture="data/textures/gui/menus/menu_star_big1.tga"/>
+			</StaticImage>
+
+			<StaticImage origin="232 20">
+				<RenderObject2D texture="data/textures/gui/menus/challenges/v_line.tga"/>
+
+				<StaticImage origin="30 0" tooltip="Challenge: use only one trooper" stealFocus="true">
+					<RenderObject2D texture="data/textures/gui/menus/challenges/oneman_grey.tga"/>
+					<StaticImage name="MissionChallenges_OneMan" hidden="true">
+						<RenderObject2D texture="data/textures/gui/menus/challenges/oneman.tga"/>
+					</StaticImage>
+				</StaticImage>
+				<StaticImage origin="70 0" tooltip="Challenge: complete mission without pausing, in real-time" stealFocus="true">
+					<RenderObject2D texture="data/textures/gui/menus/challenges/nopause_grey.tga"/>
+					<StaticImage name="MissionChallenges_NoPause" hidden="true">
+						<RenderObject2D texture="data/textures/gui/menus/challenges/nopause.tga"/>
+					</StaticImage>
+				</StaticImage>
+				<StaticImage origin="110 0" tooltip="Challenge: use a single plan to complete the mission" stealFocus="true">
+					<RenderObject2D texture="data/textures/gui/menus/challenges/oneplan_grey.tga"/>
+					<StaticImage name="MissionChallenges_OnePlan" hidden="true">
+						<RenderObject2D texture="data/textures/gui/menus/challenges/oneplan.tga"/>
+					</StaticImage>
+				</StaticImage>
+				<!--
+				<StaticImage origin="150 0" tooltip="Challenge: complete mission without being detected" stealFocus="true">
+					<RenderObject2D texture="data/textures/gui/menus/challenges/stealth_grey.tga"/>
+					<StaticImage name="MissionChallenges_Stealth" hidden="true">
+						<RenderObject2D texture="data/textures/gui/menus/challenges/stealth.tga"/>
+					</StaticImage>
+				</StaticImage>
+				-->
+			</StaticImage>
+
+			<StaticImage name="ImprovedResult" origin="590 20" hidden="true" ignoreFocus="true">
+				<RenderObject2D texture="data/textures/gui/menus/stats/menu_ms_improved.tga"/>
+			</StaticImage>
+
+			<Item origin="30 -100">
+				<StaticText name=""							 		origin="0 20" alignH="left" text="Elapsed time" font="data/textures/fonts/generic_normal_38" textColor="ffbb9f7d"/>
+				<StaticText name="MissionStatus_ElapsedTime" 		origin="200 20" alignH="left" text="00:30" font="data/textures/fonts/generic_normal_38" textColor="ff40c68a"/>
+				<StaticText name="" 								origin="0 -15" alignH="left" text="SWAT casualties" font="data/textures/fonts/generic_normal_25" textColor="ffbb9f7d"/>
+				<StaticText name="MissionStatus_SWATCasualties" 	origin="200 -15" alignH="left" text="0/4" font="data/textures/fonts/generic_normal_25" textColor="ff40c68a"/>
+				<StaticText name=""								 	origin="0 -40" alignH="left" text="Hostiles pacified" font="data/textures/fonts/generic_normal_25" textColor="ffbb9f7d"/>
+				<StaticText name="MissionStatus_HostilesPacified"	origin="200 -40" alignH="left" text="6/6" font="data/textures/fonts/generic_normal_25" textColor="ff40c68a"/>
+				<StaticText name=""							 		origin="0 -65" alignH="left" text="Total XP" font="data/textures/fonts/generic_normal_25" textColor="ffbb9f7d"/>
+				<StaticText name="MissionStatus_GainedXP" 			origin="200 -65" alignH="left" text="235" font="data/textures/fonts/generic_normal_25" textColor="ff40c68a"/>
+			</Item>
+
+			<Button origin="250 -220">
+				<RenderObject2D texture="data/textures/gui/menus/menu_butt_inside_normal.tga" sizeY="50"/>
+				<ButtonText origin="40 0" text="Detailed Stats" alignH="left" font="data/textures/fonts/generic_normal_25" textColor="ffdccfbc"/>
+				<OnHover>
+					<RenderObject2D texture="data/textures/gui/menus/menu_butt_inside_hover.tga" sizeY="50"/>
+					<ButtonText origin="40 0" text="Detailed Stats" alignH="left" font="data/textures/fonts/generic_normal_25" textColor="ffffffff"/>
+				</OnHover>
+				<OnClick>
+					<RenderObject2D texture="data/textures/gui/menus/menu_butt_inside_normal.tga" sizeY="50"/>
+					<GUIAction type="Hide" target="MissionVictory"/>
+					<GUIAction type="TriggerEvent" target="GAME_GUI_SHOW_VICTORY_DETAILED_STATS"/>
+				</OnClick>
+			</Button>
+		</Item>
+	</Item>
+
+	<StaticImage origin="0 323">
+		<RenderObject2D texture="data/textures/gui/menus/menu_background_lineup.tga"/>
+	</StaticImage>
+
+	<StaticImage origin="0 -323">
+		<RenderObject2D texture="data/textures/gui/menus/menu_background_linedown.tga"/>
+	</StaticImage>
+
+	<StaticImage origin="1100 -830" sizeX="1" sizeY="1">
+		<RenderObject2D texture="data/textures/fx/police_light.tga" blendMode="add" layer="18" color="0xffC80000" scaleX="25" scaleY="12">
+			<TextureAnimation frameWidth="128" frameHeight="128" startFrame="11" endFrame="0" animationTimeMS="1200" numLoops="-1" randomizeStartTime="false"/>
+		</RenderObject2D>
+	</StaticImage>
+
+	<StaticImage origin="1100 830" sizeX="1" sizeY="1">
+		<RenderObject2D texture="data/textures/fx/police_light.tga" blendMode="add" layer="18" color="0xff0000C8" scaleX="25" scaleY="12">
+			<TextureAnimation frameWidth="128" frameHeight="128" startFrame="0" endFrame="11" animationTimeMS="1200" numLoops="-1" randomizeStartTime="false"/>
+		</RenderObject2D>
+	</StaticImage>
+</Item>
+
+<Item name="MissionLost" origin="960 540" hidden="true">
+	<OnOpen>
+		<GUIAction type="TriggerEvent" target="GUI_CAPTURE_INPUT"/>
+		<GUIAction type="TriggerEvent" target="GUI_GAME_SETUP_MENUS_ALLOW_DISALLOW_RESTART"/> <!-- need to show/hide the restart button -->
+	</OnOpen>
+	<OnClose>
+		<GUIAction type="TriggerEvent" target="GUI_RELEASE_INPUT"/>
+	</OnClose>
+	<OnKeyDown rangeStart="0x1B" rangeEnd="0x1B">
+		<GUIAction type="Click" target="#Menu_MissionLost_Back"/>
+	</OnKeyDown>
+
+	<StaticImage>
+		<RenderObject2D texture="data/textures/gui/menus/menu_pause_black.tga" sizeX="1920" sizeY="670"/>
+	</StaticImage>
+
+	<StaticImage origin="-348 0">
+		<RenderObject2D texture="data/textures/gui/menus/background3D/menu.dds"/>
+	</StaticImage>
+
+	<StaticImage origin="0 439">
+		<RenderObject2D texture="data/textures/gui/menus/menu_black_background.tga" sizeX="1920" sizeY="202" blendMode="none"/>
+
+		<StaticText origin="-450 -69" text="End Mission" font="data/textures/fonts/generic_normal_38" textColor="ffbb9f7d"/>
+	</StaticImage>
+
+	<StaticImage origin="0 -439">
+		<RenderObject2D texture="data/textures/gui/menus/menu_black_background.tga" sizeX="1920" sizeY="202" blendMode="none"/>
+	</StaticImage>
+
+	<Item>
+		<!-- enclose all butons in a single parent item which is centered on the background -->
+		<Item origin="-600 220">
+			<Button name="#MissionLost_Button_Continue" origin="0 0">
+				<RenderObject2D texture="data/textures/gui/menus/menu_butt_inside_normal.tga"/>
+				<ButtonText origin="40 0" text="Continue" alignH="left" font="data/textures/fonts/generic_normal_25" textColor="ffdccfbc"/>
+				<OnHover>
+					<RenderObject2D texture="data/textures/gui/menus/menu_butt_inside_hover.tga"/>
+					<ButtonText origin="40 0" text="Continue" alignH="left" font="data/textures/fonts/generic_normal_25" textColor="ffffffff"/>
+				</OnHover>
+				<OnClick>
+					<RenderObject2D texture="data/textures/gui/menus/menu_butt_inside_normal.tga"/>
+					<GUIAction type="Hide" target="MissionLost"/>
+					<GUIAction type="TriggerEvent" target="GUI_GAME_MISSION_CONTINUE"/>
+				</OnClick>
+			</Button>
+
+			<Button name="Menu_MissionLost_RestartLevel_Enabled" origin="0 -70" tooltip="Restarting will reset the current result (XP/Stars).">
+				<RenderObject2D texture="data/textures/gui/menus/menu_butt_inside_normal.tga"/>
+				<ButtonText origin="40 0" text="Restart" alignH="left" font="data/textures/fonts/generic_normal_25" textColor="ffdccfbc"/>
+				<OnHover>
+					<RenderObject2D texture="data/textures/gui/menus/menu_butt_inside_hover.tga"/>
+					<ButtonText origin="40 0" text="Restart" alignH="left" font="data/textures/fonts/generic_normal_25" textColor="ffffffff"/>
+				</OnHover>
+				<OnClick>
+					<RenderObject2D texture="data/textures/gui/menus/menu_butt_inside_normal.tga"/>
+					<GUIAction type="Hide" target="MissionLost"/>
+					<GUIAction type="TriggerEvent" target="GUI_GAME_RESTART"/>
+				</OnClick>
+			</Button>
+
+			<StaticImage name="Menu_MissionLost_RestartLevel_Disabled" origin="0 -70" tooltip="Cannot restart while in 'Iron Man' mode" stealFocus="true">
+				<RenderObject2D texture="data/textures/gui/menus/menu_butt_inside_normal.tga"/>
+				<StaticText origin="40 0" text="Restart" alignH="left" font="data/textures/fonts/generic_normal_25" textColor="ff7f7f7f"/>
+				<StaticImage origin="-217 -5">
+					<RenderObject2D texture="data/textures/gui/customization/menu_locked.tga" scaleX="0.8" scaleY="0.8"/>
+				</StaticImage>
+			</StaticImage>
+
+			<Button name="#Menu_MissionLost_Back" origin="0 -140">
+				<RenderObject2D texture="data/textures/gui/menus/menu_butt_inside_normal.tga"/>
+				<ButtonText origin="40 0" text="Back" alignH="left" font="data/textures/fonts/generic_normal_25" textColor="ffdccfbc"/>
+
+				<OnHover>
+					<RenderObject2D texture="data/textures/gui/menus/menu_butt_inside_hover.tga"/>
+					<ButtonText origin="40 0" text="Back" alignH="left" font="data/textures/fonts/generic_normal_25" textColor="ffffffff"/>
+				</OnHover>
+
+				<OnClick>
+					<RenderObject2D texture="data/textures/gui/menus/menu_butt_inside_normal.tga"/>
+					<GUIAction type="Hide" target="MissionLost"/>
+					<GUIAction type="TriggerEvent" target="GAME_GUI_HIDE_HUD"/>
+					<GUIAction type="TriggerEvent" target="GUI_GAME_MISSION_ENDSCREEN_BACK"/>
+				</OnClick>
+			</Button>
+
+			<Item name="#MissionLost_ReplayUtils">
+				<Button origin="0 -390">
+					<RenderObject2D texture="data/textures/gui/menus/menu_butt_inside_normal.tga" sizeY="50"/>
+					<ButtonText origin="40 0" text="View/save replay" alignH="left" font="data/textures/fonts/generic_normal_25" textColor="ffdccfbc"/>
+					<OnHover>
+						<RenderObject2D texture="data/textures/gui/menus/menu_butt_inside_hover.tga" sizeY="50"/>
+						<ButtonText origin="40 0" text="View/save replay" alignH="left" font="data/textures/fonts/generic_normal_25" textColor="ffffffff"/>
+					</OnHover>
+					<OnClick>
+						<RenderObject2D texture="data/textures/gui/menus/menu_butt_inside_normal.tga" sizeY="50"/>
+						<GUIAction type="Hide" target="MissionLost"/>
+						<GUIAction type="TriggerEvent" target="GUI_GAME_VIEW_MISSION_REPLAY"/>
+					</OnClick>
+				</Button>
+
+				<Button origin="0 -440">
+					<RenderObject2D texture="data/textures/gui/menus/menu_butt_inside_normal.tga" sizeY="50"/>
+					<ButtonText origin="40 0" text="Export replay to video" alignH="left" font="data/textures/fonts/generic_normal_25" textColor="ffdccfbc"/>
+					<OnHover>
+						<RenderObject2D texture="data/textures/gui/menus/menu_butt_inside_hover.tga" sizeY="50"/>
+						<ButtonText origin="40 0" text="Export replay to video" alignH="left" font="data/textures/fonts/generic_normal_25" textColor="ffffffff"/>
+					</OnHover>
+					<OnClick>
+						<RenderObject2D texture="data/textures/gui/menus/menu_butt_inside_normal.tga" sizeY="50"/>
+						<GUIAction type="Hide" target="MissionLost"/>
+						<GUIAction type="TriggerEvent" target="GUI_GAME_EXPORT_REPLAY_VIDEO"/>
+					</OnClick>
+				</Button>
+			</Item>
+		</Item>
+
+		<Item>
+			<StaticImage origin="0 0">
+				<RenderObject2D texture="data/textures/gui/menus/menu_mission_lost_line.tga"/>
+			</StaticImage>
+
+			<StaticText name="MissionStatus_Text" origin="30 125" alignH="left" text="MISSION LOST" font="data/textures/fonts/generic_normal_57" textColor="ff1c1ce7"/>
+			<StaticText name="MissionStatus_Outcome" origin="30 75" alignH="left" text="" font="data/textures/fonts/generic_normal_38" textColor="ff1c1ce7"/>
+
+			<StaticImage name="MissionStatus_0Stars" origin="120 20" hidden="false">
+				<RenderObject2D texture="data/textures/gui/menus/menu_star_big0.tga"/>
+			</StaticImage>
+
+			<!-- these will be modified by the game dynamically -->
+			<Item origin="30 -100">
+				<StaticText name=""							 		origin="0 20" alignH="left" text="Elapsed time" font="data/textures/fonts/generic_normal_38" textColor="ffbb9f7d"/>
+				<StaticText name="MissionStatus_ElapsedTime" 		origin="200 20" alignH="left" text="00:30" font="data/textures/fonts/generic_normal_38" textColor="ff1c1ce7"/>
+				<StaticText name="" 								origin="0 -15" alignH="left" text="SWAT casualties" font="data/textures/fonts/generic_normal_25" textColor="ffbb9f7d"/>
+				<StaticText name="MissionStatus_SWATCasualties" 	origin="200 -15" alignH="left" text="0/4" font="data/textures/fonts/generic_normal_25" textColor="ff1c1ce7"/>
+				<StaticText name=""								 	origin="0 -40" alignH="left" text="Hostiles pacified" font="data/textures/fonts/generic_normal_25" textColor="ffbb9f7d"/>
+				<StaticText name="MissionStatus_HostilesPacified" 	origin="200 -40" alignH="left" text="6/6" font="data/textures/fonts/generic_normal_25" textColor="ff1c1ce7"/>
+				<StaticText name=""							 		origin="0 -65" alignH="left" text="Total XP" font="data/textures/fonts/generic_normal_25" textColor="ffbb9f7d"/>
+				<StaticText name="MissionStatus_GainedXP"			origin="200 -65" alignH="left" text="235" font="data/textures/fonts/generic_normal_25" textColor="ff1c1ce7"/>
+			</Item>
+		</Item>
+	</Item>
+
+	<Button origin="250 -220">
+		<RenderObject2D texture="data/textures/gui/menus/menu_butt_inside_normal.tga" sizeY="50"/>
+		<ButtonText origin="40 0" text="Detailed Stats" alignH="left" font="data/textures/fonts/generic_normal_25" textColor="ffbb9f7d"/>
+		<OnHover>
+			<RenderObject2D texture="data/textures/gui/menus/menu_butt_inside_hover.tga" sizeY="50"/>
+			<ButtonText origin="40 0" text="Detailed Stats" alignH="left" font="data/textures/fonts/generic_normal_25" textColor="ffffffff"/>
+		</OnHover>
+		<OnClick>
+			<RenderObject2D texture="data/textures/gui/menus/menu_butt_inside_normal.tga" sizeY="50"/>
+			<GUIAction type="Hide" target="MissionLost"/>
+			<GUIAction type="TriggerEvent" target="GAME_GUI_SHOW_LOSS_DETAILED_STATS"/>
+		</OnClick>
+	</Button>
+
+	<StaticImage origin="0 323">
+		<RenderObject2D texture="data/textures/gui/menus/menu_background_lineup.tga"/>
+	</StaticImage>
+
+	<StaticImage origin="0 -323">
+		<RenderObject2D texture="data/textures/gui/menus/menu_background_linedown.tga"/>
+	</StaticImage>
+
+	<StaticImage origin="1100 -830" sizeX="1" sizeY="1">
+		<RenderObject2D texture="data/textures/fx/police_light.tga" blendMode="add" layer="18" color="0xffC80000" scaleX="25" scaleY="12">
+			<TextureAnimation frameWidth="128" frameHeight="128" startFrame="11" endFrame="0" animationTimeMS="1200" numLoops="-1" randomizeStartTime="false"/>
+		</RenderObject2D>
+	</StaticImage>
+
+	<StaticImage origin="1100 830" sizeX="1" sizeY="1">
+		<RenderObject2D texture="data/textures/fx/police_light.tga" blendMode="add" layer="18" color="0xff0000C8" scaleX="25" scaleY="12">
+			<TextureAnimation frameWidth="128" frameHeight="128" startFrame="0" endFrame="11" animationTimeMS="1200" numLoops="-1" randomizeStartTime="false"/>
+		</RenderObject2D>
+	</StaticImage>
+</Item>
+
+<!-- ///////////////////////////////////////////////////////////////////////////////////// -->
+<!-- ///////////////////////////////////////////////////////////////////////////////////// -->
+<!-- ///////////////////////////////////////////////////////////////////////////////////// -->
+
+<Item name="Menu_InGame" origin="960 540" hidden="true">
+	<OnOpen>
+		<GUIAction type="TriggerEvent" target="GUI_GAME_PAUSE"/>
+		<GUIAction type="TriggerEvent" target="GUI_CAPTURE_INPUT"/>
+		<GUIAction type="TriggerEvent" target="GUI_GAME_SETUP_MENUS_ALLOW_DISALLOW_RESTART"/> <!-- need to show/hide the restart button -->
+		<GUIAction type="TriggerEvent" target="GAME_GUI_PAUSE_REPLAY"/>
+		<GUIAction type="SetForeground" target="Menu_InGame"/>
+	</OnOpen>
+
+	<OnClose>
+		<GUIAction type="TriggerEvent" target="GUI_GAME_RESUME"/>
+		<GUIAction type="TriggerEvent" target="GUI_RELEASE_INPUT"/>
+		<GUIAction type="TriggerEvent" target="GAME_GUI_RESUME_REPLAY"/>
+	</OnClose>
+
+	<StaticImage>
+		<RenderObject2D texture="data/textures/gui/menus/menu_pause_black.tga" sizeX="1920" sizeY="670"/>
+	</StaticImage>
+
+	<StaticImage origin="-348 0">
+		<RenderObject2D texture="data/textures/gui/menus/background3D/menu.dds"/>
+	</StaticImage>
+
+	<StaticImage origin="0 439">
+		<RenderObject2D texture="data/textures/gui/menus/menu_black_background.tga" sizeX="1920" sizeY="202" blendMode="none"/>
+
+		<StaticText origin="-450 -69" text="Pause" font="data/textures/fonts/generic_normal_38" textColor="ffbb9f7d"/>
+	</StaticImage>
+
+	<StaticImage origin="0 -439">
+		<RenderObject2D texture="data/textures/gui/menus/menu_black_background.tga" sizeX="1920" sizeY="202" blendMode="none"/>
+	</StaticImage>
+
+	<Item origin="0 0">
+		<StaticImage origin="410 30">
+			<RenderObject2D texture="data/textures/gui/menus/menu_logo.tga"/>
+		</StaticImage>
+
+		<!-- enclose all butons in a single parent item which is centered on the background -->
+		<Item origin="-600 245">
+			<Button name="Menu_InGame_Resume" origin="0 0">
+				<RenderObject2D texture="data/textures/gui/menus/menu_butt_inside_normal.tga"/>
+				<ButtonText origin="40 0" text="Resume" alignH="left" font="data/textures/fonts/generic_normal_25" textColor="ffdccfbc"/>
+				<OnHover>
+					<RenderObject2D texture="data/textures/gui/menus/menu_butt_inside_hover.tga"/>
+					<ButtonText origin="40 0" text="Resume" alignH="left" font="data/textures/fonts/generic_normal_25" textColor="ffffffff"/>
+				</OnHover>
+				<OnClick>
+					<RenderObject2D texture="data/textures/gui/menus/menu_butt_inside_normal.tga"/>
+					<GUIAction type="Hide" target="Menu_InGame"/>
+				</OnClick>
+			</Button>
+
+			<Button name="Menu_InGame_RestartLevel_Enabled" origin="0 -70">
+				<RenderObject2D texture="data/textures/gui/menus/menu_butt_inside_normal.tga"/>
+				<ButtonText origin="40 0" text="Restart" alignH="left" font="data/textures/fonts/generic_normal_25" textColor="ffdccfbc"/>
+				<OnHover>
+					<RenderObject2D texture="data/textures/gui/menus/menu_butt_inside_hover.tga"/>
+					<ButtonText origin="40 0" text="Restart" alignH="left" font="data/textures/fonts/generic_normal_25" textColor="ffffffff"/>
+				</OnHover>
+				<OnClick>
+					<RenderObject2D texture="data/textures/gui/menus/menu_butt_inside_normal.tga"/>
+					<GUIAction type="Hide" target="Menu_InGame"/>
+					<GUIAction type="TriggerEvent" target="GUI_GAME_RESTART"/>
+				</OnClick>
+			</Button>
+
+			<StaticImage name="Menu_InGame_RestartLevel_Disabled" origin="0 -70" tooltip="Cannot restart while in 'Iron Man' mode" stealFocus="true">
+				<RenderObject2D texture="data/textures/gui/menus/menu_butt_inside_normal.tga"/>
+				<StaticText origin="40 0" text="Restart" alignH="left" font="data/textures/fonts/generic_normal_25" textColor="ff7f7f7f"/>
+
+				<StaticImage origin="-217 -5">
+					<RenderObject2D texture="data/textures/gui/customization/menu_locked.tga" scaleX="0.8" scaleY="0.8"/>
+				</StaticImage>
+			</StaticImage>
+
+			<Button origin="0 -140">
+				<RenderObject2D texture="data/textures/gui/menus/menu_butt_inside_normal.tga"/>
+				<ButtonText origin="40 0" text="Mission Briefing" alignH="left" font="data/textures/fonts/generic_normal_25" textColor="ffdccfbc"/>
+				<OnHover>
+					<RenderObject2D texture="data/textures/gui/menus/menu_butt_inside_hover.tga"/>
+					<ButtonText origin="40 0" text="Mission Briefing" alignH="left" font="data/textures/fonts/generic_normal_25" textColor="ffffffff"/>
+				</OnHover>
+				<OnClick>
+					<RenderObject2D texture="data/textures/gui/menus/menu_butt_inside_normal.tga"/>
+					<GUIAction type="Hide" target="Menu_InGame"/>
+					<GUIAction type="TriggerEvent" target="GUI_GAME_OPEN_INGAME_BRIEFING"/>
+				</OnClick>
+			</Button>
+
+			<Button origin="0 -210">
+				<RenderObject2D texture="data/textures/gui/menus/menu_butt_inside_normal.tga"/>
+				<ButtonText origin="40 0" text="How to Play" alignH="left" font="data/textures/fonts/generic_normal_25" textColor="ffdccfbc"/>
+				<OnHover>
+					<RenderObject2D texture="data/textures/gui/menus/menu_butt_inside_hover.tga"/>
+					<ButtonText origin="40 0" text="How to Play" alignH="left" font="data/textures/fonts/generic_normal_25" textColor="ffffffff"/>
+				</OnHover>
+				<OnClick>
+					<RenderObject2D texture="data/textures/gui/menus/menu_butt_inside_normal.tga"/>
+					<GUIAction type="Hide" target="Menu_InGame"/>
+					<GUIAction type="Show" target="Menu_Help_InGame"/>
+				</OnClick>
+			</Button>
+
+			<Button origin="0 -280">
+				<RenderObject2D texture="data/textures/gui/menus/menu_butt_inside_normal.tga"/>
+				<ButtonText origin="40 0" text="Options" alignH="left" font="data/textures/fonts/generic_normal_25" textColor="ffdccfbc"/>
+				<OnHover>
+					<RenderObject2D texture="data/textures/gui/menus/menu_butt_inside_hover.tga"/>
+					<ButtonText origin="40 0" text="Options" alignH="left" font="data/textures/fonts/generic_normal_25" textColor="ffffffff"/>
+				</OnHover>
+				<OnClick>
+					<RenderObject2D texture="data/textures/gui/menus/menu_butt_inside_normal.tga"/>
+					<GUIAction type="Hide" target="Menu_InGame"/>
+					<GUIAction type="Show" target="Menu_Options_InGame"/>
+				</OnClick>
+			</Button>
+
+			<Button name="Menu_InGame_QuitToMainMenu" origin="0 -420">
+				<RenderObject2D texture="data/textures/gui/menus/menu_butt_inside_normal.tga"/>
+				<ButtonText origin="40 0" text="Back to Menu" alignH="left" font="data/textures/fonts/generic_normal_25" textColor="ffdccfbc"/>
+				<OnHover>
+					<RenderObject2D texture="data/textures/gui/menus/menu_butt_inside_hover.tga"/>
+					<ButtonText origin="40 0" text="Back to Menu" alignH="left" font="data/textures/fonts/generic_normal_25" textColor="ffffffff"/>
+				</OnHover>
+				<OnClick>
+					<RenderObject2D texture="data/textures/gui/menus/menu_butt_inside_normal.tga"/>
+					<GUIAction type="Hide" target="Menu_InGame"/>
+					<GUIAction type="Show" target="Menu_Main"/>
+					<GUIAction type="TriggerEvent" target="GAME_GUI_HIDE_HUD"/>
+					<GUIAction type="TriggerEvent" target="GUI_GAME_QUIT_TO_MAIN_MENU"/>
+				</OnClick>
+			</Button>
+
+			<Button name="Menu_InGame_QuitGame" origin="0 -490">
+				<RenderObject2D texture="data/textures/gui/menus/menu_butt_inside_normal.tga"/>
+				<ButtonText origin="40 0" text="Quit Game" alignH="left" font="data/textures/fonts/generic_normal_25" textColor="ffdccfbc"/>
+				<OnHover>
+					<RenderObject2D texture="data/textures/gui/menus/menu_butt_inside_hover.tga"/>
+					<ButtonText origin="40 0" text="Quit Game" alignH="left" font="data/textures/fonts/generic_normal_25" textColor="ffffffff"/>
+				</OnHover>
+				<OnClick>
+					<RenderObject2D texture="data/textures/gui/menus/menu_butt_inside_normal.tga"/>
+					<GUIAction type="Hide" target="Menu_InGame"/>
+					<GUIAction type="TriggerEvent" target="GAME_GUI_HIDE_HUD"/>
+					<GUIAction type="TriggerEvent" target="GUI_GAME_QUIT_TO_MAIN_MENU"/>
+					<GUIAction type="Hide" target="Menu_Main"/>
+					<GUIAction type="TriggerEvent" target="GUI_GAME_QUIT"/>
+				</OnClick>
+			</Button>
+		</Item>
+	</Item>
+
+	<StaticImage origin="0 323">
+		<RenderObject2D texture="data/textures/gui/menus/menu_background_lineup.tga"/>
+	</StaticImage>
+
+	<StaticImage origin="0 -323">
+		<RenderObject2D texture="data/textures/gui/menus/menu_background_linedown.tga"/>
+	</StaticImage>
+
+	<StaticImage origin="1100 -830" sizeX="1" sizeY="1">
+		<RenderObject2D texture="data/textures/fx/police_light.tga" blendMode="add" layer="18" color="0xffC80000" scaleX="25" scaleY="12">
+			<TextureAnimation frameWidth="128" frameHeight="128" startFrame="11" endFrame="0" animationTimeMS="1200" numLoops="-1" randomizeStartTime="false"/>
+		</RenderObject2D>
+	</StaticImage>
+
+	<StaticImage origin="1100 830" sizeX="1" sizeY="1">
+		<RenderObject2D texture="data/textures/fx/police_light.tga" blendMode="add" layer="18" color="0xff0000C8" scaleX="25" scaleY="12">
+			<TextureAnimation frameWidth="128" frameHeight="128" startFrame="0" endFrame="11" animationTimeMS="1200" numLoops="-1" randomizeStartTime="false"/>
+		</RenderObject2D>
+	</StaticImage>
+</Item>
+
+<Item name="Menu_Main" origin="960 540" hidden="true">
+	<OnOpen>
+		<GUIAction type="TriggerEvent" target="GUI_CAPTURE_INPUT"/>
+		<GUIAction type="SetForeground" target="Menu_Main"/>
+		<GUIAction type="TriggerEvent" target="GUI_GAME_MAIN_MENU_OPENED"/>
+		<GUIAction type="AddChild" target="#Menu_RosterWidget"/>
+	</OnOpen>
+
+	<OnClose>
+		<GUIAction type="TriggerEvent" target="GUI_RELEASE_INPUT"/>
+		<GUIAction type="RemoveChild" target="#Menu_RosterWidget"/>
+	</OnClose>
+
+	<StaticImage origin="-348 0">
+		<RenderObject2D texture="data/textures/gui/menus/background3D/menu.dds"/>
+	</StaticImage>
+
+	<Item name="Menu_Background" origin="0 0">
+		<StaticImage name="Menu_Main_Logo" origin="-590 380">
+			<RenderObject2D texture="data/textures/gui/menus/menu_logo.tga"/>
+		</StaticImage>
+
+		<!-- enclose all butons in a single parent item which is centered on the background -->
+		<Item origin="-600 150">
+			<Button name="Menu_Main_SingleMission" origin="0 0">
+				<RenderObject2D texture="data/textures/gui/menus/menu_butt_inside_normal.tga"/>
+				<ButtonText origin="40 0" text="Single Mission" alignH="left" font="data/textures/fonts/generic_normal_25" textColor="ffdccfbc"/>
+				<OnHover>
+					<RenderObject2D texture="data/textures/gui/menus/menu_butt_inside_hover.tga"/>
+					<ButtonText origin="40 0" text="Single Mission" alignH="left" font="data/textures/fonts/generic_normal_25" textColor="ffffffff"/>
+				</OnHover>
+				<OnClick>
+					<RenderObject2D texture="data/textures/gui/menus/menu_butt_inside_normal.tga"/>
+					<GUIAction type="Hide" target="Menu_Main"/>
+					<GUIAction type="Show" target="Menu_MissionSelect"/>
+				</OnClick>
+			</Button>
+
+			<Button origin="0 -70">
+				<RenderObject2D texture="data/textures/gui/menus/menu_butt_inside_normal.tga"/>
+				<ButtonText origin="40 0" text="Campaign" alignH="left" font="data/textures/fonts/generic_normal_25" textColor="ffdccfbc"/>
+				<OnHover>
+					<RenderObject2D texture="data/textures/gui/menus/menu_butt_inside_hover.tga"/>
+					<ButtonText origin="40 0" text="Campaign" alignH="left" font="data/textures/fonts/generic_normal_25" textColor="ffffffff"/>
+				</OnHover>
+				<OnClick>
+					<RenderObject2D texture="data/textures/gui/menus/menu_butt_inside_normal.tga"/>
+					<GUIAction type="Hide" target="Menu_Main"/>
+					<GUIAction type="Show" target="#Menu_CampaignSelect"/>
+				</OnClick>
+			</Button>
+			
+			<Button origin="0 -140">
+				<RenderObject2D texture="data/textures/gui/menus/menu_butt_inside_normal.tga"/>
+				<ButtonText origin="40 0" text="Replays" alignH="left" font="data/textures/fonts/generic_normal_25" textColor="ffdccfbc"/>
+				<OnHover>
+					<RenderObject2D texture="data/textures/gui/menus/menu_butt_inside_hover.tga"/>
+					<ButtonText origin="40 0" text="Replays" alignH="left" font="data/textures/fonts/generic_normal_25" textColor="ffffffff"/>
+				</OnHover>
+				<OnClick>
+					<RenderObject2D texture="data/textures/gui/menus/menu_butt_inside_normal.tga"/>
+					<GUIAction type="Hide" target="Menu_Main"/>
+					<GUIAction type="TriggerEvent" target="GUI_GAME_LOAD_REPLAYS_PAGE"/>
+					<GUIAction type="Show" target="Menu_Replays"/>
+				</OnClick>
+			</Button>
+
+			<Button origin="0 -210">
+				<RenderObject2D texture="data/textures/gui/menus/menu_butt_inside_normal.tga"/>
+				<ButtonText origin="40 0" text="How to Play" alignH="left" font="data/textures/fonts/generic_normal_25" textColor="ffdccfbc"/>
+				<OnHover>
+					<RenderObject2D texture="data/textures/gui/menus/menu_butt_inside_hover.tga"/>
+					<ButtonText origin="40 0" text="How to Play" alignH="left" font="data/textures/fonts/generic_normal_25" textColor="ffffffff"/>
+				</OnHover>
+				<OnClick>
+					<RenderObject2D texture="data/textures/gui/menus/menu_butt_inside_normal.tga"/>
+					<GUIAction type="Hide" target="Menu_Main"/>
+					<GUIAction type="Show" target="Menu_Help_MainMenu"/>
+				</OnClick>
+			</Button>
+
+			<Button origin="0 -280">
+				<RenderObject2D texture="data/textures/gui/menus/menu_butt_inside_normal.tga"/>
+				<ButtonText origin="40 0" text="Credits" alignH="left" font="data/textures/fonts/generic_normal_25" textColor="ffdccfbc"/>
+				<OnHover>
+					<RenderObject2D texture="data/textures/gui/menus/menu_butt_inside_hover.tga"/>
+					<ButtonText origin="40 0" text="Credits" alignH="left" font="data/textures/fonts/generic_normal_25" textColor="ffffffff"/>
+				</OnHover>
+				<OnClick>
+					<RenderObject2D texture="data/textures/gui/menus/menu_butt_inside_normal.tga"/>
+					<GUIAction type="Hide" target="Menu_Main"/>
+					<GUIAction type="Show" target="Menu_Credits"/>
+				</OnClick>
+			</Button>
+
+			<Button name="Menu_InGame_QuitGame" origin="0 -350">
+				<RenderObject2D texture="data/textures/gui/menus/menu_butt_inside_normal.tga"/>
+				<ButtonText origin="40 0" text="Quit Game" alignH="left" font="data/textures/fonts/generic_normal_25" textColor="ffdccfbc"/>
+				<OnHover>
+					<RenderObject2D texture="data/textures/gui/menus/menu_butt_inside_hover.tga"/>
+					<ButtonText origin="40 0" text="Quit Game" alignH="left" font="data/textures/fonts/generic_normal_25" textColor="ffffffff"/>
+				</OnHover>
+				<OnClick>
+					<RenderObject2D texture="data/textures/gui/menus/menu_butt_inside_normal.tga"/>
+					<GUIAction type="Hide" target="Menu_Main"/>
+					<GUIAction type="TriggerEvent" target="GUI_GAME_QUIT"/>
+				</OnClick>
+			</Button>
+		</Item>
+	</Item>
+
+	<Button name="#RandomStat" origin="0 -510" hidden="false">
+			<RenderObject2D texture="data/textures/gui/menus/stats/menu_statsarrow_normal.tga"/>
+
+			<ButtonText origin="0 2" alignH="center" font="data/textures/fonts/generic_normal_25" textColor="ff3bb984"/>
+
+			<OnHover>
+				<RenderObject2D texture="data/textures/gui/menus/stats/menu_statsarrow_hover.tga"/>
+				<ButtonText origin="0 2" text="Random Stats" alignH="center" font="data/textures/fonts/generic_normal_25" textColor="ff58d6a0"/>
+			</OnHover>
+
+			<OnClick>
+				<RenderObject2D texture="data/textures/gui/menus/stats/menu_statsarrow_normal.tga"/>
+				<GUIAction type="Hide" target="Menu_Main"/>
+				<GUIAction type="Show" target="Menu_OverallStats"/>
+			</OnClick>
+	</Button>
+
+	<Item origin="0 -439">
+		<Item origin="-670 -30">
+		<!--
+			<RenderObject2D texture="data/textures/gui/menus/extra_options_tab.tga"/>
+		-->
+			<Button origin="-100 0" tooltip="Options">
+				<RenderObject2D texture="data/textures/gui/menus/menu_options_normal.tga"/>
+				<OnHover>
+					<RenderObject2D texture="data/textures/gui/menus/menu_options_hover.tga"/>
+				</OnHover>
+				<OnClick>
+					<RenderObject2D texture="data/textures/gui/menus/menu_options_normal.tga"/>
+					<GUIAction type="Hide" target="Menu_Main"/>
+					<GUIAction type="Show" target="Menu_Options_Main"/>
+				</OnClick>
+			</Button>
+
+			<Button origin="0 0" tooltip="Editor">
+				<RenderObject2D texture="data/textures/gui/menus/menu_editor_normal.tga"/>
+				<OnHover>
+					<RenderObject2D texture="data/textures/gui/menus/menu_editor_hover.tga"/>
+				</OnHover>
+				<OnClick>
+					<RenderObject2D texture="data/textures/gui/menus/menu_editor_normal.tga"/>
+					<GUIAction type="TriggerEvent" target="TYPE_TOGGLE_EDITOR_MODE"/>
+				</OnClick>
+			</Button>
+
+			<Button origin="0 100" tooltip="FUBAR Difficulty Enabled!">
+				<RenderObject2D texture="data/textures/gui/menus/FUBAR_Difficulty_Normal.tga"/>
+				<OnHover>
+					<RenderObject2D texture="data/textures/gui/menus/FUBAR_Difficulty_hover.tga"/>
+				</OnHover>
+				<OnClick>
+					<RenderObject2D texture="data/textures/gui/menus/FUBAR_Difficulty_hover.tga"/>
+				</OnClick>
+			</Button>
+						
+			<Button origin="100 0" tooltip="Mods">
+				<RenderObject2D texture="data/textures/gui/menus/menu_mods_normal.tga"/>
+				<OnHover>
+					<RenderObject2D texture="data/textures/gui/menus/menu_mods_hover.tga"/>
+				</OnHover>
+				<OnClick>
+					<RenderObject2D texture="data/textures/gui/menus/menu_mods_normal.tga"/>
+					<GUIAction type="Hide" target="Menu_Main"/>
+					<GUIAction type="Show" target="Menu_Mods"/>
+				</OnClick>
+			</Button>
+		</Item>
+
+		<Item origin="760 60">
+			<Button origin="0 0" tooltip="Online community">
+				<RenderObject2D texture="data/textures/gui/menus/menu_buttonforum_normal.tga"/>
+
+				<OnHover>
+					<RenderObject2D texture="data/textures/gui/menus/menu_buttonforum_hover.tga"/>
+				</OnHover>
+
+				<OnClick>
+					<RenderObject2D texture="data/textures/gui/menus/menu_buttonforum_normal.tga"/>
+					<GUIAction type="OpenURL" target="http://www.inthekillhouse.com/forum"/>
+				</OnClick>
+			</Button>
+
+			<Button origin="70 0" tooltip="Facebook page">
+				<RenderObject2D texture="data/textures/gui/menus/menu_buttonfacebook_normal.tga"/>
+
+				<OnHover>
+					<RenderObject2D texture="data/textures/gui/menus/menu_buttonfacebook_hover.tga"/>
+				</OnHover>
+
+				<OnClick>
+					<RenderObject2D texture="data/textures/gui/menus/menu_buttonfacebook_normal.tga"/>
+					<GUIAction type="OpenURL" target="https://www.facebook.com/KillHouseGames"/>
+				</OnClick>
+			</Button>
+
+			<Button origin="140 0" tooltip="Twitter">
+				<RenderObject2D texture="data/textures/gui/menus/menu_buttontwitter_normal.tga"/>
+
+				<OnHover>
+					<RenderObject2D texture="data/textures/gui/menus/menu_buttontwitter_hover.tga"/>
+				</OnHover>
+
+				<OnClick>
+					<RenderObject2D texture="data/textures/gui/menus/menu_buttontwitter_normal.tga"/>
+					<GUIAction type="OpenURL" target="http://www.twitter.com/inthekillhouse"/>
+				</OnClick>
+			</Button>
+		</Item>
+
+		<Button name="#HUD_News" origin="665 -35" hidden="true" stealFocus="true">
+				<RenderObject2D texture="data/textures/gui/menus/news_box.tga"/>
+				<ButtonText origin="10 5" alignH="left" font="data/textures/fonts/generic_normal_25" textColor="ffdccfbc"/>
+
+				<OnHover>
+					<RenderObject2D texture="data/textures/gui/menus/news_box_hover.tga"/>
+					<ButtonText origin="10 5" alignH="left" font="data/textures/fonts/generic_normal_25" textColor="ffffffff"/>
+				</OnHover>
+
+				<OnClick>
+					<RenderObject2D texture="data/textures/gui/menus/news_box.tga"/>
+					<GUIAction type="TriggerEvent" target="GUI_GAME_NEWS_CLICK"/>
+				</OnClick>
+
+				<StaticText origin="10 35" alignH="left" text="News:" font="data/textures/fonts/generic_normal_17" textColor="ffbb9f7d"/>
+				<StaticText name="#ClickForMore" origin="10 -25" alignH="left" text="(click to read more)" font="data/textures/fonts/generic_normal_17" textColor="ffbb9f7d"/>
+		</Button>
+	</Item>
+</Item>
+
+<!-- roster widget -->
+<StaticImage name="#Menu_RosterWidget" origin="604 420" hidden="true">
+	<OnOpen>
+		<GUIAction type="Show" target="#Menu_RosterWidget_TrooperStatusPortraits_Parent"/>
+		<GUIAction type="TriggerEvent" target="GUI_GAME_ROSTER_WIDGET_OPENED"/>
+	</OnOpen>
+
+	<OnClose>
+		<GUIAction type="Hide" target="#Menu_RosterWidget_TrooperStatusPortraits_Parent"/>
+	</OnClose>
+
+	<RenderObject2D texture="data/textures/gui/menus/roster_widget/squadbg.tga"/>
+
+	<StaticText name="#SquadName" origin="101 58" text="Squad name" font="data/textures/fonts/generic_normal_25" textColor="ffdccfbc"/>
+
+	<StaticImage name="#SquadBadge" origin="-230 0">
+		<RenderObject2D texture="data/badges/squadbadge.tga"/>
+	</StaticImage>
+
+	<Item origin="45 34">
+		<Item name="#ProgressBar" origin="60 0" sizeX="383" sizeY="22" tooltip="Squad rank: each level adds 1 doctrine point, also used to unlock playable classes." stealFocus="true">
+			<!-- this element is resized to fill the parent bar -->
+			<StaticImage name="#BarElement">
+				<RenderObject2D texture="data/textures/gui/menus/roster_widget/squadxpbar.tga" blendMode="none"/>
+			</StaticImage>
+		</Item>
+
+		<StaticText name="#RosterLevel" origin="-120 -1" text="Level 1" font="data/textures/fonts/generic_normal_19" alignH="left" textColor="ffffffff"/>
+		<StaticText name="#RosterXPPoints" origin="240 -1" text="10200/20000" font="data/textures/fonts/generic_normal_19" alignH="right" textColor="ffffffff"/>
+	</Item>
+
+	<Item name="#Menu_RosterWidget_TrooperStatusPortraits_Parent" origin="-70 -3" hidden="true">
+		<OnOpen>
+			<GUIAction type="AddChild" target="#Menu_RosterWidget_TrooperStatusPortraits"/>
+		</OnOpen>
+		<OnClose>
+			<GUIAction type="RemoveChild" target="#Menu_RosterWidget_TrooperStatusPortraits"/>
+		</OnClose>
+	</Item>
+
+	<Item origin="8 -48">
+		<Button name="#DoctrineButton" origin="197 0">
+			<RenderObject2D texture="data/textures/gui/menus/roster_widget/doctrine.tga"/>
+			<ButtonText origin="20 0" text="Doctrine" alignH="left" font="data/textures/fonts/generic_normal_25" textColor="ffdccfbc"/>
+			<OnHover>
+				<RenderObject2D texture="data/textures/gui/menus/roster_widget/doctrine_hover.tga"/>
+				<ButtonText origin="20 0" text="Doctrine" alignH="left" font="data/textures/fonts/generic_normal_25" textColor="ffffffff"/>
+			</OnHover>
+			<OnClick>
+				<RenderObject2D texture="data/textures/gui/menus/roster_widget/doctrine.tga"/>
+
+				<GUIAction type="Hide" target="Menu_Main"/>
+				<GUIAction type="Hide" target="#Menu_CampaignBriefing"/>
+				<GUIAction type="Hide" target="#Menu_CampaignProgress"/>
+				<GUIAction type="Show" target="DoctrineTree"/> <!-- link followed by the game in order to return to the current owner -->
+			</OnClick>
+			<StaticText name="#NumDoctrinePoints" origin="70 -1" text="oO" font="data/textures/fonts/generic_normal_25" textColor="ffffffff"/>
+		</Button>
+
+		<Button name="#RosterButton" origin="0 0">
+			<RenderObject2D texture="data/textures/gui/menus/roster_widget/roster.tga"/>
+			<ButtonText origin="20 0" text="Roster" alignH="left" font="data/textures/fonts/generic_normal_25" textColor="ffdccfbc"/>
+			<OnHover>
+				<RenderObject2D texture="data/textures/gui/menus/roster_widget/roster_hover.tga"/>
+				<ButtonText origin="20 0" text="Roster" alignH="left" font="data/textures/fonts/generic_normal_25" textColor="ffffffff"/>
+			</OnHover>
+			<OnClick>
+				<RenderObject2D texture="data/textures/gui/menus/roster_widget/roster.tga"/>
+
+				<GUIAction type="Hide" target="Menu_Main"/>
+				<GUIAction type="Hide" target="#Menu_CampaignBriefing"/>
+				<GUIAction type="Hide" target="#Menu_CampaignProgress"/>
+				<GUIAction type="Show" target="CustomizationScreen_MainMenu"/> <!-- link followed by the game in order to return to the current owner -->
+			</OnClick>
+			<StaticText name="#NumRosterStars" origin="70 -1" text="194" font="data/textures/fonts/generic_normal_25" textColor="ff14b5f5"/>
+		</Button>
+	</Item>
+</StaticImage>
+
+<Item name="#Menu_RosterWidget_TrooperStatusPortraits" hidden="true">
+	<Item name="#Trooper0" origin="0 0">
+		<StaticImage name="#Portrait">
+			<RenderObject2D sizeX="36" sizeY="36"/>
+		</StaticImage>
+		<StaticImage name="#Dead">
+			<RenderObject2D texture="data/textures/gui/menus/roster_widget/dead.tga"/>
+		</StaticImage>
+		<StaticImage name="#Injured1">
+			<RenderObject2D texture="data/textures/gui/menus/roster_widget/injured_light.tga"/>
+		</StaticImage>
+		<StaticImage name="#Injured2">
+			<RenderObject2D texture="data/textures/gui/menus/roster_widget/injured_hard.tga"/>
+		</StaticImage>
+	</Item>
+	<Item name="#Trooper1" origin="39 0">
+		<StaticImage name="#Portrait">
+			<RenderObject2D sizeX="36" sizeY="36"/>
+		</StaticImage>
+		<StaticImage name="#Dead">
+			<RenderObject2D texture="data/textures/gui/menus/roster_widget/dead.tga"/>
+		</StaticImage>
+		<StaticImage name="#Injured1">
+			<RenderObject2D texture="data/textures/gui/menus/roster_widget/injured_light.tga"/>
+		</StaticImage>
+		<StaticImage name="#Injured2">
+			<RenderObject2D texture="data/textures/gui/menus/roster_widget/injured_hard.tga"/>
+		</StaticImage>
+	</Item>
+	<Item name="#Trooper2" origin="78 0">
+		<StaticImage name="#Portrait">
+			<RenderObject2D sizeX="36" sizeY="36"/>
+		</StaticImage>
+		<StaticImage name="#Dead">
+			<RenderObject2D texture="data/textures/gui/menus/roster_widget/dead.tga"/>
+		</StaticImage>
+		<StaticImage name="#Injured1">
+			<RenderObject2D texture="data/textures/gui/menus/roster_widget/injured_light.tga"/>
+		</StaticImage>
+		<StaticImage name="#Injured2">
+			<RenderObject2D texture="data/textures/gui/menus/roster_widget/injured_hard.tga"/>
+		</StaticImage>
+	</Item>
+	<Item name="#Trooper3" origin="117 0">
+		<StaticImage name="#Portrait">
+			<RenderObject2D sizeX="36" sizeY="36"/>
+		</StaticImage>
+		<StaticImage name="#Dead">
+			<RenderObject2D texture="data/textures/gui/menus/roster_widget/dead.tga"/>
+		</StaticImage>
+		<StaticImage name="#Injured1">
+			<RenderObject2D texture="data/textures/gui/menus/roster_widget/injured_light.tga"/>
+		</StaticImage>
+		<StaticImage name="#Injured2">
+			<RenderObject2D texture="data/textures/gui/menus/roster_widget/injured_hard.tga"/>
+		</StaticImage>
+	</Item>
+	<Item name="#Trooper4" origin="156 0">
+		<StaticImage name="#Portrait">
+			<RenderObject2D sizeX="36" sizeY="36"/>
+		</StaticImage>
+		<StaticImage name="#Dead">
+			<RenderObject2D texture="data/textures/gui/menus/roster_widget/dead.tga"/>
+		</StaticImage>
+		<StaticImage name="#Injured1">
+			<RenderObject2D texture="data/textures/gui/menus/roster_widget/injured_light.tga"/>
+		</StaticImage>
+		<StaticImage name="#Injured2">
+			<RenderObject2D texture="data/textures/gui/menus/roster_widget/injured_hard.tga"/>
+		</StaticImage>
+	</Item>
+	<Item name="#Trooper5" origin="195 0">
+		<StaticImage name="#Portrait">
+			<RenderObject2D sizeX="36" sizeY="36"/>
+		</StaticImage>
+		<StaticImage name="#Dead">
+			<RenderObject2D texture="data/textures/gui/menus/roster_widget/dead.tga"/>
+		</StaticImage>
+		<StaticImage name="#Injured1">
+			<RenderObject2D texture="data/textures/gui/menus/roster_widget/injured_light.tga"/>
+		</StaticImage>
+		<StaticImage name="#Injured2">
+			<RenderObject2D texture="data/textures/gui/menus/roster_widget/injured_hard.tga"/>
+		</StaticImage>
+	</Item>
+	<Item name="#Trooper6" origin="234 0">
+		<StaticImage name="#Portrait">
+			<RenderObject2D sizeX="36" sizeY="36"/>
+		</StaticImage>
+		<StaticImage name="#Dead">
+			<RenderObject2D texture="data/textures/gui/menus/roster_widget/dead.tga"/>
+		</StaticImage>
+		<StaticImage name="#Injured1">
+			<RenderObject2D texture="data/textures/gui/menus/roster_widget/injured_light.tga"/>
+		</StaticImage>
+		<StaticImage name="#Injured2">
+			<RenderObject2D texture="data/textures/gui/menus/roster_widget/injured_hard.tga"/>
+		</StaticImage>
+	</Item>
+	<Item name="#Trooper7" origin="273 0">
+		<StaticImage name="#Portrait">
+			<RenderObject2D sizeX="36" sizeY="36"/>
+		</StaticImage>
+		<StaticImage name="#Dead">
+			<RenderObject2D texture="data/textures/gui/menus/roster_widget/dead.tga"/>
+		</StaticImage>
+		<StaticImage name="#Injured1">
+			<RenderObject2D texture="data/textures/gui/menus/roster_widget/injured_light.tga"/>
+		</StaticImage>
+		<StaticImage name="#Injured2">
+			<RenderObject2D texture="data/textures/gui/menus/roster_widget/injured_hard.tga"/>
+		</StaticImage>
+	</Item>
+	<Item name="#Trooper8" origin="312 0">
+		<StaticImage name="#Portrait">
+			<RenderObject2D sizeX="36" sizeY="36"/>
+		</StaticImage>
+		<StaticImage name="#Dead">
+			<RenderObject2D texture="data/textures/gui/menus/roster_widget/dead.tga"/>
+		</StaticImage>
+		<StaticImage name="#Injured1">
+			<RenderObject2D texture="data/textures/gui/menus/roster_widget/injured_light.tga"/>
+		</StaticImage>
+		<StaticImage name="#Injured2">
+			<RenderObject2D texture="data/textures/gui/menus/roster_widget/injured_hard.tga"/>
+		</StaticImage>
+	</Item>
+	<Item name="#Trooper9" origin="351 0">
+		<StaticImage name="#Portrait">
+			<RenderObject2D sizeX="36" sizeY="36"/>
+		</StaticImage>
+		<StaticImage name="#Dead">
+			<RenderObject2D texture="data/textures/gui/menus/roster_widget/dead.tga"/>
+		</StaticImage>
+		<StaticImage name="#Injured1">
+			<RenderObject2D texture="data/textures/gui/menus/roster_widget/injured_light.tga"/>
+		</StaticImage>
+		<StaticImage name="#Injured2">
+			<RenderObject2D texture="data/textures/gui/menus/roster_widget/injured_hard.tga"/>
+		</StaticImage>
+	</Item>
+</Item>
+
+<Item name="Menu_OverallStats" origin="960 540" hidden="true">
+	<OnKeyDown rangeStart="0x1B" rangeEnd="0x1B">
+		<GUIAction type="Click" target="Menu_OverallStats_Back"/>
+	</OnKeyDown>
+
+	<OnOpen>
+		<GUIAction type="TriggerEvent" target="GUI_CAPTURE_INPUT"/>
+		<GUIAction type="TriggerEvent" target="GUI_GAME_OVERALL_STATS"/>
+		<GUIAction type="SetForeground" target="DetailedStatistics"/>
+	</OnOpen>
+
+	<OnClose>
+		<GUIAction type="TriggerEvent" target="GUI_RELEASE_INPUT"/>
+	</OnClose>
+
+	<StaticImage>
+		<RenderObject2D texture="data/textures/gui/menus/menu_pause_black.tga" sizeX="1920" sizeY="670" color="7f7f7f7f"/>
+	</StaticImage>
+
+	<StaticImage origin="-348 0">
+		<RenderObject2D texture="data/textures/gui/menus/background3D/menu.dds"/>
+	</StaticImage>
+
+	<StaticImage origin="0 439">
+		<RenderObject2D texture="data/textures/gui/menus/menu_black_background.tga" sizeX="1920" sizeY="202" blendMode="none"/>
+
+		<StaticText origin="-370 -69" text="Overall Stats" font="data/textures/fonts/generic_normal_38" textColor="ffbb9f7d"/>
+	</StaticImage>
+
+	<StaticImage origin="0 -439">
+		<RenderObject2D texture="data/textures/gui/menus/menu_black_background.tga" sizeX="1920" sizeY="202" blendMode="none"/>
+
+		<!-- back button -->
+		<Button name="Menu_OverallStats_Back" origin="-400 39">
+			<RenderObject2D texture="data/textures/gui/menus/menu_button_normal.tga"/>
+			<ButtonText text="Back" font="data/textures/fonts/generic_normal_25" textColor="ffbb9f7d"/>
+
+			<OnHover>
+				<RenderObject2D texture="data/textures/gui/menus/menu_button_hover.tga"/>
+				<ButtonText text="Back" font="data/textures/fonts/generic_normal_25" textColor="ffffffff"/>
+			</OnHover>
+
+			<OnClick>
+				<RenderObject2D texture="data/textures/gui/menus/menu_button_normal.tga"/>
+				<GUIAction type="Hide" target="Menu_OverallStats"/>
+				<GUIAction type="Show" target="Menu_Main"/>
+			</OnClick>
+		</Button>
+	</StaticImage>
+
+
+	<StaticImage origin="0 323">
+		<RenderObject2D texture="data/textures/gui/menus/menu_background_lineup.tga"/>
+	</StaticImage>
+
+	<StaticImage origin="0 -323">
+		<RenderObject2D texture="data/textures/gui/menus/menu_background_linedown.tga"/>
+	</StaticImage>
+
+	<StaticImage name="DetailedStatsPanel" origin="0 0">
+		<RenderObject2D texture="data/textures/gui/menus/stats/menu_stats_backgr.tga"/>
+
+		<Item origin="0 286" >
+			<StaticImage  name="StatsLine_Background">
+				<RenderObject2D sizeX="680" texture="data/textures/gui/menus/stats/menu_ms_line_h.tga"/>
+			</StaticImage>
+		</Item>
+
+		<Item name="StatsLine1" origin="0 265" sizeX="1" sizeY="41"> <!-- sizeX is not important, but we need custom sizeY so that we know how much lower we need to put the next row -->
+			<StaticImage name="StatsLine_Background">
+				<RenderObject2D sizeX="680" texture="data/textures/gui/menus/stats/menu_ms_line_h2.tga"/>
+			</StaticImage>
+
+			<StaticImage origin="90 0">
+				<RenderObject2D sizeY="47" texture="data/textures/gui/menus/stats/menu_ms_line_v.tga"/>
+			</StaticImage>
+
+			<StaticImage origin="0 -20">
+				<RenderObject2D  sizeX="680" texture="data/textures/gui/menus/stats/menu_ms_line_h.tga"/>
+			</StaticImage>
+
+			<Item origin="0 0">
+				<StaticText name="#StatName" 	origin="-300 0" text="Stat" font="data/textures/fonts/generic_normal_25" textColor="ffbb9f7d" alignH="left"/>
+				<StaticText name="#StatValue" 	origin="110 0" text="43" font="data/textures/fonts/generic_normal_25" textColor="ffA8A8A8" alignH="left"/>
+			</Item>
+		</Item>
+	</StaticImage>
+</Item>
+
+<Item name="Menu_MissionSelect" origin="960 540" hidden="true">
+	<OnOpen>
+		<GUIAction type="TriggerEvent" target="GUI_CAPTURE_INPUT"/>
+		<GUIAction type="TriggerEvent" target="GUI_GAME_MISSIONSELECT_OPENED"/> <!-- used to do on-demand thumbnail loading and update the mission generator seed -->
+	</OnOpen>
+
+	<OnClose>
+		<GUIAction type="TriggerEvent" target="GUI_RELEASE_INPUT"/>
+	</OnClose>
+
+	<OnKeyDown rangeStart="0x1B" rangeEnd="0x1B">
+		<GUIAction type="Click" target="Menu_MissionSelect_Back"/>
+	</OnKeyDown>
+
+	<StaticImage>
+		<RenderObject2D texture="data/textures/gui/menus/menu_pause_black.tga" sizeX="1920" sizeY="670" color="7f7f7f7f"/>
+	</StaticImage>
+
+	<StaticImage origin="-348 0">
+		<RenderObject2D texture="data/textures/gui/menus/background3D/menu.dds"/>
+	</StaticImage>
+
+	<StaticImage origin="0 439">
+		<RenderObject2D texture="data/textures/gui/menus/menu_black_background.tga" sizeX="1920" sizeY="202" blendMode="none"/>
+
+		<StaticImage origin="0 -21">
+			<RenderObject2D texture="data/textures/gui/menus/menu_missiontab_gradient.tga"/>
+
+			<StaticText origin="0 10" text="Select Mission" font="data/textures/fonts/generic_normal_38" textColor="ffbb9f7d"/>
+		</StaticImage>
+
+		<Item origin="0 -72">
+			<Checkbox name="#Menu_MissionSelect_OfficialTab" origin="-312 0" stealFocus="true" defaultState="CheckedState">
+				<UncheckedState>
+					<RenderObject2D texture="data/textures/gui/menus/menu_missiontab_02.tga"/>
+					<ButtonText text="Official missions" font="data/textures/fonts/generic_normal_19" textColor="ffbb9f7d"/>
+					<OnHover>
+						<RenderObject2D texture="data/textures/gui/menus/menu_missiontab_02b.tga"/>
+					</OnHover>
+					<OnClick>
+						<RenderObject2D texture="data/textures/gui/menus/menu_missiontab_02.tga"/>
+						<GUIAction type="Uncheck" target="#Menu_MissionSelect_DownloadsTab"/>
+						<GUIAction type="Uncheck" target="#Menu_MissionSelect_YourTab"/>
+						<GUIAction type="Uncheck" target="#Menu_MissionSelect_Generator"/>
+						<GUIAction type="TriggerEvent" target="GUI_GAME_SELECTMISSION_FILTER_OFFICIAL"/>
+					</OnClick>
+				</UncheckedState>
+
+				<CheckedState acceptInput="false" origin="0 -10">
+					<RenderObject2D texture="data/textures/gui/menus/menu_missiontab_01.tga"/>
+					<ButtonText origin="0 10" text="Official missions" font="data/textures/fonts/generic_normal_19" textColor="ffffffff"/>
+				</CheckedState>
+			</Checkbox>
+
+			<Checkbox name="#Menu_MissionSelect_Generator" origin="-104 0" stealFocus="true" defaultState="UncheckedState">
+				<UncheckedState>
+					<RenderObject2D texture="data/textures/gui/menus/menu_missiontab_02.tga"/>
+					<ButtonText text="Mission generator" font="data/textures/fonts/generic_normal_19" textColor="ffbb9f7d"/>
+					<OnOpen>
+						<GUIAction type="Show" target="#MissionSelect_PagesParent"/>
+						<GUIAction type="Hide" target="#MissionSelect_GeneratorParent"/>
+					</OnOpen>
+					<OnHover>
+						<RenderObject2D texture="data/textures/gui/menus/menu_missiontab_02b.tga"/>
+					</OnHover>
+					<OnClick>
+						<RenderObject2D texture="data/textures/gui/menus/menu_missiontab_02.tga"/>
+						<GUIAction type="Uncheck" target="#Menu_MissionSelect_OfficialTab"/>
+						<GUIAction type="Uncheck" target="#Menu_MissionSelect_DownloadsTab"/>
+						<GUIAction type="Uncheck" target="#Menu_MissionSelect_YourTab"/>
+						<GUIAction type="Hide" target="#MissionSelect_PagesParent"/>
+						<GUIAction type="Show" target="#MissionSelect_GeneratorParent"/>
+					</OnClick>
+				</UncheckedState>
+
+				<CheckedState acceptInput="false" origin="0 -10">
+					<RenderObject2D texture="data/textures/gui/menus/menu_missiontab_01.tga"/>
+					<ButtonText origin="0 10" text="Mission generator" font="data/textures/fonts/generic_normal_19" textColor="ffffffff"/>
+				</CheckedState>
+			</Checkbox>
+
+			<Checkbox name="#Menu_MissionSelect_DownloadsTab" origin="104 0" stealFocus="true" defaultState="UncheckedState">
+				<UncheckedState>
+					<RenderObject2D texture="data/textures/gui/menus/menu_missiontab_02.tga"/>
+					<ButtonText text="Downloads" font="data/textures/fonts/generic_normal_19" textColor="ffbb9f7d"/>
+					<OnHover>
+						<RenderObject2D texture="data/textures/gui/menus/menu_missiontab_02b.tga"/>
+					</OnHover>
+					<OnClick>
+						<RenderObject2D texture="data/textures/gui/menus/menu_missiontab_02.tga"/>
+						<GUIAction type="Uncheck" target="#Menu_MissionSelect_OfficialTab"/>
+						<GUIAction type="Uncheck" target="#Menu_MissionSelect_YourTab"/>
+						<GUIAction type="Uncheck" target="#Menu_MissionSelect_Generator"/>
+						<GUIAction type="TriggerEvent" target="GUI_GAME_SELECTMISSION_FILTER_DOWNLOADS"/>
+					</OnClick>
+				</UncheckedState>
+
+				<CheckedState acceptInput="false" origin="0 -10">
+					<RenderObject2D texture="data/textures/gui/menus/menu_missiontab_01.tga"/>
+					<ButtonText origin="0 10" text="Downloads" font="data/textures/fonts/generic_normal_19" textColor="ffffffff"/>
+				</CheckedState>
+			</Checkbox>
+
+			<Checkbox name="#Menu_MissionSelect_YourTab" origin="312 0" stealFocus="true" defaultState="UncheckedState">
+				<UncheckedState>
+					<RenderObject2D texture="data/textures/gui/menus/menu_missiontab_02.tga"/>
+					<ButtonText text="Your creations" font="data/textures/fonts/generic_normal_19" textColor="ffbb9f7d"/>
+					<OnHover>
+						<RenderObject2D texture="data/textures/gui/menus/menu_missiontab_02b.tga"/>
+					</OnHover>
+					<OnClick>
+						<RenderObject2D texture="data/textures/gui/menus/menu_missiontab_02.tga"/>
+						<GUIAction type="Uncheck" target="#Menu_MissionSelect_OfficialTab"/>
+						<GUIAction type="Uncheck" target="#Menu_MissionSelect_DownloadsTab"/>
+						<GUIAction type="Uncheck" target="#Menu_MissionSelect_Generator"/>
+						<GUIAction type="TriggerEvent" target="GUI_GAME_SELECTMISSION_FILTER_YOURS"/>
+					</OnClick>
+				</UncheckedState>
+
+				<CheckedState acceptInput="false" origin="0 -10">
+					<RenderObject2D texture="data/textures/gui/menus/menu_missiontab_01.tga"/>
+					<ButtonText origin="0 10" text="Your creations" font="data/textures/fonts/generic_normal_19" textColor="ffffffff"/>
+				</CheckedState>
+			</Checkbox>
+		</Item>
+	</StaticImage>
+
+	<StaticImage origin="0 -439">
+		<RenderObject2D texture="data/textures/gui/menus/menu_black_background.tga" sizeX="1920" sizeY="202" blendMode="none"/>
+	</StaticImage>
+
+	<StaticImage origin="0 323">
+		<RenderObject2D texture="data/textures/gui/menus/menu_background_lineup.tga"/>
+	</StaticImage>
+
+	<StaticImage origin="0 -323">
+		<RenderObject2D texture="data/textures/gui/menus/menu_background_linedown.tga"/>
+	</StaticImage>
+
+	<Button name="#MissionSelect_ButtonTemplate" hidden="true">
+		<RenderObject2D texture="data/textures/gui/menus/menu_maps_backgr02.tga"/>
+		<OnHover>
+			<RenderObject2D texture="data/textures/gui/menus/menu_maps_backgr02_hover.tga"/>
+		</OnHover>
+		<OnClick>
+			<RenderObject2D texture="data/textures/gui/menus/menu_maps_backgr02.tga"/>
+
+			<GUIAction type="Hide" target="Menu_MissionSelect"/>
+
+			<!-- modified by the game to be send with the right parameters -->
+			<GUIAction type="TriggerEvent" target="GUI_GAME_SINGLE_MISSION_BRIEFING"/>
+		</OnClick>
+
+		<StaticImage origin="0 0" ignoreFocus="true">
+			<RenderObject2D texture="data/textures/gui/menus/menu_mission_thumb_background.tga"/>
+
+			<StaticImage name="#MapThumbnail" ignoreFocus="true">
+				<RenderObject2D texture="data/textures/background/killhouse1r1d_thumb.dds" scaleX="0.37" scaleY="0.37"/>
+			</StaticImage>
+		</StaticImage>
+
+		<Item origin="0 88">
+			<Button name="MissionSelect_ThreeStars" tooltip="View detailed stats" hidden="true">
+				<RenderObject2D texture="data/textures/gui/menus/menu_star3.tga"/>
+				<OnHover>
+					<RenderObject2D scaleX="1.2" scaleY="1.2" texture="data/textures/gui/menus/menu_star3.tga"/>
+				</OnHover>
+				<OnClick>
+					<RenderObject2D texture="data/textures/gui/menus/menu_star3.tga"/>
+					<GUIAction type="TriggerEvent" target="GUI_GAME_DETAILED_STATS_BRIEFING"/>
+					<GUIAction type="Show" target="DetailedStatistics_MissionSelect" />
+				</OnClick>
+			</Button>
+
+			<Button name="MissionSelect_TwoStars" tooltip="View detailed stats" hidden="true">
+				<RenderObject2D texture="data/textures/gui/menus/menu_star2.tga"/>
+				<OnHover>
+					<RenderObject2D scaleX="1.2" scaleY="1.2" texture="data/textures/gui/menus/menu_star2.tga"/>
+				</OnHover>
+				<OnClick>
+					<RenderObject2D texture="data/textures/gui/menus/menu_star2.tga"/>
+					<GUIAction type="TriggerEvent" target="GUI_GAME_DETAILED_STATS_BRIEFING"/>
+					<GUIAction type="Show" target="DetailedStatistics_MissionSelect" />
+				</OnClick>
+			</Button>
+
+			<Button name="MissionSelect_OneStar" tooltip="View detailed stats" hidden="true">
+				<RenderObject2D texture="data/textures/gui/menus/menu_star1.tga"/>
+				<OnHover>
+					<RenderObject2D scaleX="1.2" scaleY="1.2" texture="data/textures/gui/menus/menu_star1.tga"/>
+				</OnHover>
+				<OnClick>
+					<RenderObject2D texture="data/textures/gui/menus/menu_star1.tga"/>
+					<GUIAction type="TriggerEvent" target="GUI_GAME_DETAILED_STATS_BRIEFING"/>
+					<GUIAction type="Show" target="DetailedStatistics_MissionSelect" />
+				</OnClick>
+			</Button>
+
+			<Button name="MissionSelect_ZeroStars" tooltip="View detailed stats" hidden="true">
+				<RenderObject2D texture="data/textures/gui/menus/menu_star0.tga"/>
+				<OnHover>
+					<RenderObject2D scaleX="1.2" scaleY="1.2" texture="data/textures/gui/menus/menu_star0.tga"/>
+				</OnHover>
+				<OnClick>
+					<RenderObject2D texture="data/textures/gui/menus/menu_star0.tga"/>
+					<GUIAction type="TriggerEvent" target="GUI_GAME_DETAILED_STATS_BRIEFING"/>
+					<GUIAction type="Show" target="DetailedStatistics_MissionSelect" />
+				</OnClick>
+			</Button>
+		</Item>
+
+		<Item origin="150 75">
+			<StaticImage name="MissionIcon_#ClearHostiles" hidden="true">
+				<RenderObject2D texture="data/textures/gui/menus/menu_missiontype_clear.tga"/>
+			</StaticImage>
+			<StaticImage name="MissionIcon_#BombDefusal" hidden="true">
+				<RenderObject2D texture="data/textures/gui/menus/menu_missiontype_defuse.tga"/>
+			</StaticImage>
+			<StaticImage name="MissionIcon_#StopExecution" hidden="true">
+				<RenderObject2D texture="data/textures/gui/menus/menu_missiontype_execution.tga"/>
+			</StaticImage>
+			<StaticImage name="MissionIcon_#HostageRescue" hidden="true">
+				<RenderObject2D texture="data/textures/gui/menus/menu_missiontype_hostage.tga"/>
+			</StaticImage>
+			<StaticImage name="MissionIcon_#ArrestWarrant" hidden="true">
+				<RenderObject2D texture="data/textures/gui/menus/menu_missiontype_arrest.tga"/>
+			</StaticImage>
+			<StaticImage name="MissionIcon_#ProtectVIP" hidden="true">
+				<RenderObject2D texture="data/textures/gui/menus/menu_missiontype_vip.tga"/>
+			</StaticImage>
+			<StaticImage name="MissionIcon_#DopeRaid" hidden="true">
+				<RenderObject2D texture="data/textures/gui/menus/menu_missiontype_drugs.tga"/>
+			</StaticImage>
+		</Item>
+
+		<!-- was originally at 30y -->
+		<Item name="MissionSelect_Challenges" origin="-123 20" hidden="true">
+			<StaticImage origin="0 0" tooltip="Challenge: use only one trooper" ignoreFocus="true">
+				<RenderObject2D texture="data/textures/gui/menus/challenges/oneman_small_grey.tga"/>
+				<StaticImage name="MissionChallenges_OneMan" hidden="true" ignoreFocus="true">
+					<RenderObject2D texture="data/textures/gui/menus/challenges/oneman_small.tga"/>
+				</StaticImage>
+			</StaticImage>
+			<StaticImage origin="0 -20" tooltip="Challenge: complete mission without pausing, in real-time" ignoreFocus="true">
+				<RenderObject2D texture="data/textures/gui/menus/challenges/nopause_small_grey.tga"/>
+				<StaticImage name="MissionChallenges_NoPause" hidden="true" ignoreFocus="true">
+					<RenderObject2D texture="data/textures/gui/menus/challenges/nopause_small.tga"/>
+				</StaticImage>
+			</StaticImage>
+			<StaticImage origin="0 -40" tooltip="Challenge: use a single plan to complete the mission" ignoreFocus="true">
+				<RenderObject2D texture="data/textures/gui/menus/challenges/oneplan_small_grey.tga"/>
+				<StaticImage name="MissionChallenges_OnePlan" hidden="true" ignoreFocus="true">
+					<RenderObject2D texture="data/textures/gui/menus/challenges/oneplan_small.tga"/>
+				</StaticImage>
+			</StaticImage>
+			<!--
+			<StaticImage origin="0 -60" tooltip="Challenge: complete mission without being detected" ignoreFocus="true">
+				<RenderObject2D texture="data/textures/gui/menus/challenges/stealth_small_grey.tga"/>
+				<StaticImage name="MissionChallenges_Stealth" hidden="true" ignoreFocus="true">
+					<RenderObject2D texture="data/textures/gui/menus/challenges/stealth_small.tga"/>
+				</StaticImage>
+			</StaticImage>
+			-->
+		</Item>
+
+		<StaticText name="#Number" origin="-163 85" text="99" font="data/textures/fonts/numbers_normal_14" textColor="ffc5c2a8"/>
+		<StaticText name="#MapName" origin="0 -88" text="Cartel beach party" font="data/textures/fonts/generic_normal_17" textColor="ffc5c2a8"/>
+	</Button>
+
+	<Item name="#MissionSelect_PagesParent">
+		<StaticImage origin="0 110">
+			<RenderObject2D texture="data/textures/gui/menus/menu_missionselect_line.tga"/>
+		</StaticImage>
+		<StaticImage origin="0 -110">
+			<RenderObject2D texture="data/textures/gui/menus/menu_missionselect_line.tga"/>
+		</StaticImage>
+
+		<!-- this is duplicated by the game as many times as needed -->
+		<Item name="#MissionSelect_Page" hidden="true">
+			<OnOpen>
+				<GUIAction type="TriggerEvent" target="GUI_GAME_MISSIONSELECT_PAGE_OPENED"/> <!-- used to optimize thumbnail loading, on demand only -->
+			</OnOpen>
+
+			<!-- level buttons are dynamically added here by the game -->
+			<Item name="#MissionSelect_Parent" sizeX="1120" sizeY="660">
+			</Item>
+
+			<Button name="Menu_MissionSelect_PrevPageButton" origin="-650 0" sizeX="160" sizeY="160">
+				<RenderObject2D texture="data/textures/gui/menus/menu_arrowleft_normal.tga"/>
+				<ButtonText text="Prev" alignH="right" font="data/textures/fonts/generic_normal_25" textColor="ffbb9f7d"/>
+
+				<OnHover>
+					<RenderObject2D texture="data/textures/gui/menus/menu_arrowleft_hover.tga"/>
+				</OnHover>
+
+				<OnClick>
+					<RenderObject2D texture="data/textures/gui/menus/menu_arrowleft_normal.tga"/>
+
+					<!-- these are modified by the game to point to the correct page -->
+					<GUIAction type="Hide" target="#MissionSelect_Page"/>
+					<GUIAction type="Show" target="#MissionSelect_Page"/>
+				</OnClick>
+			</Button>
+
+			<Button name="Menu_MissionSelect_NextPageButton" origin="650 0" sizeX="160" sizeY="160">
+				<RenderObject2D texture="data/textures/gui/menus/menu_arrowright_normal.tga"/>
+				<ButtonText text="Next" alignH="left" font="data/textures/fonts/generic_normal_25" textColor="ffbb9f7d"/>
+				<OnHover>
+					<RenderObject2D texture="data/textures/gui/menus/menu_arrowright_hover.tga"/>
+				</OnHover>
+				<OnClick>
+					<RenderObject2D texture="data/textures/gui/menus/menu_arrowright_normal.tga"/>
+
+					<!-- these are modified by the game to point to the correct page -->
+					<GUIAction type="Hide" target="#MissionSelect_Page"/>
+					<GUIAction type="Show" target="#MissionSelect_Page"/>
+				</OnClick>
+			</Button>
+
+			<!-- current mission selection page -->
+			<Item name="Menu_MissionSelect_Thumbs" origin="0 -359">
+
+				<!-- these is added dinamically by the game, so don't change it -->
+				<Button name="Menu_MissionSelect_Thumb_Button" hidden="true">
+					<RenderObject2D texture="data/textures/gui/menus/menu_missionpage_normal.tga"/>
+					<OnHover>
+						<RenderObject2D texture="data/textures/gui/menus/menu_missionpage_select.tga"/>
+					</OnHover>
+					<OnClick>
+						<RenderObject2D texture="data/textures/gui/menus/menu_missionpage_normal.tga"/>
+
+						<!-- these are modified by the game to point to the correct page -->
+						<GUIAction type="Hide" target="#MissionSelect_Page"/>
+						<GUIAction type="Show" target="#MissionSelect_Page"/>
+					</OnClick>
+				</Button>
+
+				<StaticImage name="Menu_MissionSelect_Thumb_CurrentPage" hidden="true">
+					<RenderObject2D texture="data/textures/gui/menus/menu_missionpage_select.tga"/>
+				</StaticImage>
+			</Item>
+		</Item>
+	</Item>
+
+	<Item name="#MissionSelect_GeneratorParent" hidden="true">
+		<OnOpen>
+			<GUIAction type="TriggerEvent" target="GUI_GAME_RMG_SCREEN_OPENED"/>
+		</OnOpen>
+
+		<Item origin="0 -439">
+			<Button origin="370 30">
+				<RenderObject2D texture="data/textures/gui/menus/menu_button02_normal.tga"/>
+				<ButtonText text="House" font="data/textures/fonts/generic_normal_25" textColor="ffbb9f7d"/>
+				<OnHover>
+					<RenderObject2D texture="data/textures/gui/menus/menu_button02_hover.tga"/>
+					<ButtonText text="House" font="data/textures/fonts/generic_normal_25" textColor="ffffffff"/>
+				</OnHover>
+				<OnClick>
+					<RenderObject2D texture="data/textures/gui/menus/menu_button02_normal.tga"/>
+					<GUIAction type="Hide" target="Menu_MissionSelect"/>
+					<GUIAction type="TriggerEvent" target="GUI_GAME_RMG_GENERATE_FROM_LAYOUT"/>
+				</OnClick>
+			</Button>
+
+			<Button origin="520 30">
+				<RenderObject2D texture="data/textures/gui/menus/menu_button02_normal.tga"/>
+				<ButtonText text="Killhouse" font="data/textures/fonts/generic_normal_25" textColor="ffbb9f7d"/>
+				<OnHover>
+					<RenderObject2D texture="data/textures/gui/menus/menu_button02_hover.tga"/>
+					<ButtonText text="Killhouse" font="data/textures/fonts/generic_normal_25" textColor="ffffffff"/>
+				</OnHover>
+				<OnClick>
+					<RenderObject2D texture="data/textures/gui/menus/menu_button02_normal.tga"/>
+					<GUIAction type="Hide" target="Menu_MissionSelect"/>
+					<GUIAction type="TriggerEvent" target="GUI_GAME_RMG_GENERATE_KILLHOUSE"/>
+				</OnClick>
+			</Button>
+
+			<StaticText origin="440 80" text="Generate:" font="data/textures/fonts/generic_normal_25" textColor="ffbb9f7d"/>
+		</Item>
+
+		<StaticImage origin="0 0">
+			<RenderObject2D texture="data/textures/gui/menus/stats/menu_stats_backgr.tga"/>
+
+			<StaticText origin="260 -250" text="Random seed:" font="data/textures/fonts/generic_normal_25" textColor="ffbb9f7d"/>
+			<Editbox name="#RandomSeed" origin="260 -285" acceptNumbers="true" acceptLetters="true" forceUppercase="true" maxCharacters="12" focusedTextColor="ffffffff">
+				<RenderObject2D texture="data/textures/gui/menus/mission_generator/rndseed_editbox.tga" color="0xa6ffffff"/>
+				<TextFormat origin="15 0" text="FFFFFFFF0000" font="data/textures/fonts/generic_normal_25" alignH="left" textColor="ffbb9f7d"/>
+
+				<OnHover>
+					<RenderObject2D texture="data/textures/gui/menus/mission_generator/rndseed_editbox.tga"/>
+				</OnHover>
+
+				<OnClick>
+					<RenderObject2D texture="data/textures/gui/menus/mission_generator/rndseed_editbox.tga"/>
+				</OnClick>
+
+				<OnKeyDown>
+					<GUIAction type="TriggerEvent" target="GUI_GAME_RMG_SEED_EDITED"/>
+				</OnKeyDown>
+
+				<Cursor>
+					<RenderObject2D texture="data/textures/gui/menus/mission_generator/rndseed_editbox_cursor.tga"/>
+				</Cursor>
+			</Editbox>
+
+			<Item name="MapSize" origin="-180 280">
+				<StaticText text="Map size" origin="-110 0" font="data/textures/fonts/generic_normal_25" alignH="left" textColor="ffc5c2a8"/>
+				<StaticImage origin="0 -20">
+					<RenderObject2D texture="data/textures/gui/customization/menu_line.tga"/>
+				</StaticImage>
+
+				<StaticImage origin="0 -177">
+					<RenderObject2D texture="data/textures/gui/customization/menu_line.tga"/>
+				</StaticImage>
+
+				<!-- name matters! mapsize_check_#number# where #number# is the coded seed bit value for this option -->
+				<Item origin="0 -38">
+					<Checkbox name="#mapsize_check0" origin="110 0" stealFocus="true" defaultState="CheckedState">
+						<UncheckedState>
+							<RenderObject2D texture="data/textures/gui/menus/menu_radiobutton_normal.tga"/>
+							<ButtonText origin="-200 0" text="Random" font="data/textures/fonts/generic_normal_19" alignH="left" textColor="ffbb9f7d"/>
+							<OnHover>
+								<RenderObject2D texture="data/textures/gui/menus/menu_radiobutton_hover.tga"/>
+							</OnHover>
+							<OnClick>
+								<RenderObject2D texture="data/textures/gui/menus/menu_radiobutton_normal.tga"/>
+								<GUIAction type="Uncheck" target="#mapsize_check1"/>
+								<GUIAction type="Uncheck" target="#mapsize_check2"/>
+								<GUIAction type="Uncheck" target="#mapsize_check3"/>
+								<GUIAction type="Uncheck" target="#mapsize_check4"/>
+								<GUIAction type="TriggerEvent" target="GUI_GAME_RMG_MAPSIZE_CHANGED"/>
+							</OnClick>
+						</UncheckedState>
+
+						<CheckedState acceptInput="false">
+							<RenderObject2D texture="data/textures/gui/menus/menu_radiobutton_check.tga"/>
+							<ButtonText origin="-200 0" text="Random" font="data/textures/fonts/generic_normal_19" alignH="left" textColor="ffbb9f7d"/>
+						</CheckedState>
+					</Checkbox>
+
+					<Checkbox name="#mapsize_check1" origin="110 -30" stealFocus="true" defaultState="UncheckedState">
+						<UncheckedState>
+							<RenderObject2D texture="data/textures/gui/menus/menu_radiobutton_normal.tga"/>
+							<ButtonText origin="-200 0" text="Small" font="data/textures/fonts/generic_normal_19" alignH="left" textColor="ffbb9f7d"/>
+							<OnHover>
+								<RenderObject2D texture="data/textures/gui/menus/menu_radiobutton_hover.tga"/>
+							</OnHover>
+							<OnClick>
+								<RenderObject2D texture="data/textures/gui/menus/menu_radiobutton_normal.tga"/>
+								<GUIAction type="Uncheck" target="#mapsize_check0"/>
+								<GUIAction type="Uncheck" target="#mapsize_check2"/>
+								<GUIAction type="Uncheck" target="#mapsize_check3"/>
+								<GUIAction type="Uncheck" target="#mapsize_check4"/>
+								<GUIAction type="TriggerEvent" target="GUI_GAME_RMG_MAPSIZE_CHANGED"/>
+							</OnClick>
+						</UncheckedState>
+
+						<CheckedState acceptInput="false">
+							<RenderObject2D texture="data/textures/gui/menus/menu_radiobutton_check.tga"/>
+							<ButtonText origin="-200 0" text="Small" font="data/textures/fonts/generic_normal_19" alignH="left" textColor="ffbb9f7d"/>
+						</CheckedState>
+					</Checkbox>
+
+					<Checkbox name="#mapsize_check2" origin="110 -60" stealFocus="true" defaultState="UncheckedState">
+						<UncheckedState>
+							<RenderObject2D texture="data/textures/gui/menus/menu_radiobutton_normal.tga"/>
+							<ButtonText origin="-200 0" text="Medium" font="data/textures/fonts/generic_normal_19" alignH="left" textColor="ffbb9f7d"/>
+							<OnHover>
+								<RenderObject2D texture="data/textures/gui/menus/menu_radiobutton_hover.tga"/>
+							</OnHover>
+							<OnClick>
+								<RenderObject2D texture="data/textures/gui/menus/menu_radiobutton_normal.tga"/>
+								<GUIAction type="Uncheck" target="#mapsize_check0"/>
+								<GUIAction type="Uncheck" target="#mapsize_check1"/>
+								<GUIAction type="Uncheck" target="#mapsize_check3"/>
+								<GUIAction type="Uncheck" target="#mapsize_check4"/>
+								<GUIAction type="TriggerEvent" target="GUI_GAME_RMG_MAPSIZE_CHANGED"/>
+							</OnClick>
+						</UncheckedState>
+
+						<CheckedState acceptInput="false">
+							<RenderObject2D texture="data/textures/gui/menus/menu_radiobutton_check.tga"/>
+							<ButtonText origin="-200 0" text="Medium" font="data/textures/fonts/generic_normal_19" alignH="left" textColor="ffbb9f7d"/>
+						</CheckedState>
+					</Checkbox>
+
+					<Checkbox name="#mapsize_check3" origin="110 -90" stealFocus="true" defaultState="UncheckedState">
+						<UncheckedState>
+							<RenderObject2D texture="data/textures/gui/menus/menu_radiobutton_normal.tga"/>
+							<ButtonText origin="-200 0" text="Large" font="data/textures/fonts/generic_normal_19" alignH="left" textColor="ffbb9f7d"/>
+							<OnHover>
+								<RenderObject2D texture="data/textures/gui/menus/menu_radiobutton_hover.tga"/>
+							</OnHover>
+							<OnClick>
+								<RenderObject2D texture="data/textures/gui/menus/menu_radiobutton_normal.tga"/>
+								<GUIAction type="Uncheck" target="#mapsize_check0"/>
+								<GUIAction type="Uncheck" target="#mapsize_check1"/>
+								<GUIAction type="Uncheck" target="#mapsize_check2"/>
+								<GUIAction type="Uncheck" target="#mapsize_check4"/>
+								<GUIAction type="TriggerEvent" target="GUI_GAME_RMG_MAPSIZE_CHANGED"/>
+							</OnClick>
+						</UncheckedState>
+
+						<CheckedState acceptInput="false">
+							<RenderObject2D texture="data/textures/gui/menus/menu_radiobutton_check.tga"/>
+							<ButtonText origin="-200 0" text="Large" font="data/textures/fonts/generic_normal_19" alignH="left" textColor="ffbb9f7d"/>
+						</CheckedState>
+					</Checkbox>
+
+					<Checkbox name="#mapsize_check4" origin="110 -120" stealFocus="true" defaultState="UncheckedState">
+						<UncheckedState>
+							<RenderObject2D texture="data/textures/gui/menus/menu_radiobutton_normal.tga"/>
+							<ButtonText origin="-200 0" text="XL" font="data/textures/fonts/generic_normal_19" alignH="left" textColor="ffbb9f7d"/>
+							<OnHover>
+								<RenderObject2D texture="data/textures/gui/menus/menu_radiobutton_hover.tga"/>
+							</OnHover>
+							<OnClick>
+								<RenderObject2D texture="data/textures/gui/menus/menu_radiobutton_normal.tga"/>
+								<GUIAction type="Uncheck" target="#mapsize_check0"/>
+								<GUIAction type="Uncheck" target="#mapsize_check1"/>
+								<GUIAction type="Uncheck" target="#mapsize_check2"/>
+								<GUIAction type="Uncheck" target="#mapsize_check3"/>
+								<GUIAction type="TriggerEvent" target="GUI_GAME_RMG_MAPSIZE_CHANGED"/>
+							</OnClick>
+						</UncheckedState>
+
+						<CheckedState acceptInput="false">
+							<RenderObject2D texture="data/textures/gui/menus/menu_radiobutton_check.tga"/>
+							<ButtonText origin="-200 0" text="XL" font="data/textures/fonts/generic_normal_19" alignH="left" textColor="ffbb9f7d"/>
+						</CheckedState>
+					</Checkbox>
+				</Item>
+			</Item>	<!-- map size -->
+
+			<!--
+			<Item name="MissionType" origin="180 280">
+				<StaticText text="Mission type" origin="-110 0" font="data/textures/fonts/generic_normal_25" alignH="left" textColor="ffc5c2a8"/>
+				<StaticImage origin="0 -20">
+					<RenderObject2D texture="data/textures/gui/customization/menu_line.tga"/>
+				</StaticImage>
+
+				<StaticImage origin="0 -177">
+					<RenderObject2D texture="data/textures/gui/customization/menu_line.tga"/>
+				</StaticImage>
+
+				<Item origin="0 -38">
+					<Checkbox name="#missiontype_check0" origin="110 0" stealFocus="true" defaultState="CheckedState">
+						<UncheckedState>
+							<RenderObject2D texture="data/textures/gui/menus/menu_radiobutton_normal.tga"/>
+							<ButtonText origin="-200 0" text="Random" font="data/textures/fonts/generic_normal_19" alignH="left" textColor="ffbb9f7d"/>
+
+							<OnHover>
+								<RenderObject2D texture="data/textures/gui/menus/menu_radiobutton_hover.tga"/>
+							</OnHover>
+
+							<OnClick>
+								<RenderObject2D texture="data/textures/gui/menus/menu_radiobutton_normal.tga"/>
+								<GUIAction type="Uncheck" target="#missiontype_check1"/>
+								<GUIAction type="Uncheck" target="#missiontype_check2"/>
+								<GUIAction type="Uncheck" target="#missiontype_check3"/>
+								<GUIAction type="Uncheck" target="#missiontype_check4"/>
+								<GUIAction type="TriggerEvent" target="GUI_GAME_RMG_MISSIONTYPE_CHANGED"/>
+							</OnClick>
+						</UncheckedState>
+
+						<CheckedState acceptInput="false">
+							<RenderObject2D texture="data/textures/gui/menus/menu_radiobutton_check.tga"/>
+							<ButtonText origin="-200 0" text="Random" font="data/textures/fonts/generic_normal_19" alignH="left" textColor="ffbb9f7d"/>
+						</CheckedState>
+					</Checkbox>
+
+					<Checkbox name="#missiontype_check1" origin="110 -30" stealFocus="true" defaultState="UncheckedState">
+						<UncheckedState>
+							<RenderObject2D texture="data/textures/gui/menus/menu_radiobutton_normal.tga"/>
+							<ButtonText origin="-200 0" text="Clear hostiles" font="data/textures/fonts/generic_normal_19" alignH="left" textColor="ffbb9f7d"/>
+
+							<OnHover>
+								<RenderObject2D texture="data/textures/gui/menus/menu_radiobutton_hover.tga"/>
+							</OnHover>
+
+							<OnClick>
+								<RenderObject2D texture="data/textures/gui/menus/menu_radiobutton_normal.tga"/>
+								<GUIAction type="Uncheck" target="#missiontype_check0"/>
+								<GUIAction type="Uncheck" target="#missiontype_check2"/>
+								<GUIAction type="Uncheck" target="#missiontype_check3"/>
+								<GUIAction type="Uncheck" target="#missiontype_check4"/>
+								<GUIAction type="TriggerEvent" target="GUI_GAME_RMG_MISSIONTYPE_CHANGED"/>
+							</OnClick>
+						</UncheckedState>
+
+						<CheckedState acceptInput="false">
+							<RenderObject2D texture="data/textures/gui/menus/menu_radiobutton_check.tga"/>
+							<ButtonText origin="-200 0" text="Clear hostiles" font="data/textures/fonts/generic_normal_19" alignH="left" textColor="ffbb9f7d"/>
+						</CheckedState>
+					</Checkbox>
+
+					<Checkbox name="#missiontype_check2" origin="110 -60" stealFocus="true" defaultState="UncheckedState">
+						<UncheckedState>
+							<RenderObject2D texture="data/textures/gui/menus/menu_radiobutton_normal.tga"/>
+							<ButtonText origin="-200 0" text="Bomb defusal" font="data/textures/fonts/generic_normal_19" alignH="left" textColor="ffbb9f7d"/>
+
+							<OnHover>
+								<RenderObject2D texture="data/textures/gui/menus/menu_radiobutton_hover.tga"/>
+							</OnHover>
+
+							<OnClick>
+								<RenderObject2D texture="data/textures/gui/menus/menu_radiobutton_normal.tga"/>
+								<GUIAction type="Uncheck" target="#missiontype_check0"/>
+								<GUIAction type="Uncheck" target="#missiontype_check1"/>
+								<GUIAction type="Uncheck" target="#missiontype_check3"/>
+								<GUIAction type="Uncheck" target="#missiontype_check4"/>
+								<GUIAction type="TriggerEvent" target="GUI_GAME_RMG_MISSIONTYPE_CHANGED"/>
+							</OnClick>
+						</UncheckedState>
+
+						<CheckedState acceptInput="false">
+							<RenderObject2D texture="data/textures/gui/menus/menu_radiobutton_check.tga"/>
+							<ButtonText origin="-200 0" text="Bomb defusal" font="data/textures/fonts/generic_normal_19" alignH="left" textColor="ffbb9f7d"/>
+						</CheckedState>
+					</Checkbox>
+
+					<Checkbox name="#missiontype_check3" origin="110 -90" stealFocus="true" defaultState="UncheckedState">
+						<UncheckedState>
+							<RenderObject2D texture="data/textures/gui/menus/menu_radiobutton_normal.tga"/>
+							<ButtonText origin="-200 0" text="Hostage rescue" font="data/textures/fonts/generic_normal_19" alignH="left" textColor="ffbb9f7d"/>
+
+							<OnHover>
+								<RenderObject2D texture="data/textures/gui/menus/menu_radiobutton_hover.tga"/>
+							</OnHover>
+
+							<OnClick>
+								<RenderObject2D texture="data/textures/gui/menus/menu_radiobutton_normal.tga"/>
+								<GUIAction type="Uncheck" target="#missiontype_check0"/>
+								<GUIAction type="Uncheck" target="#missiontype_check1"/>
+								<GUIAction type="Uncheck" target="#missiontype_check2"/>
+								<GUIAction type="Uncheck" target="#missiontype_check4"/>
+								<GUIAction type="TriggerEvent" target="GUI_GAME_RMG_MISSIONTYPE_CHANGED"/>
+							</OnClick>
+						</UncheckedState>
+
+						<CheckedState acceptInput="false">
+							<RenderObject2D texture="data/textures/gui/menus/menu_radiobutton_check.tga"/>
+							<ButtonText origin="-200 0" text="Hostage rescue" font="data/textures/fonts/generic_normal_19" alignH="left" textColor="ffbb9f7d"/>
+						</CheckedState>
+					</Checkbox>
+
+					<Checkbox name="#missiontype_check4" origin="110 -120" stealFocus="true" defaultState="UncheckedState">
+						<UncheckedState>
+							<RenderObject2D texture="data/textures/gui/menus/menu_radiobutton_normal.tga"/>
+							<ButtonText origin="-200 0" text="Stop execution" font="data/textures/fonts/generic_normal_19" alignH="left" textColor="ffbb9f7d"/>
+
+							<OnHover>
+								<RenderObject2D texture="data/textures/gui/menus/menu_radiobutton_hover.tga"/>
+							</OnHover>
+
+							<OnClick>
+								<RenderObject2D texture="data/textures/gui/menus/menu_radiobutton_normal.tga"/>
+								<GUIAction type="Uncheck" target="#missiontype_check0"/>
+								<GUIAction type="Uncheck" target="#missiontype_check1"/>
+								<GUIAction type="Uncheck" target="#missiontype_check2"/>
+								<GUIAction type="Uncheck" target="#missiontype_check3"/>
+								<GUIAction type="TriggerEvent" target="GUI_GAME_RMG_MISSIONTYPE_CHANGED"/>
+							</OnClick>
+						</UncheckedState>
+
+						<CheckedState acceptInput="false">
+							<RenderObject2D texture="data/textures/gui/menus/menu_radiobutton_check.tga"/>
+							<ButtonText origin="-200 0" text="Stop execution" font="data/textures/fonts/generic_normal_19" alignH="left" textColor="ffbb9f7d"/>
+						</CheckedState>
+					</Checkbox>
+				</Item>
+			</Item>
+			--> <!-- mission type -->
+
+			<Item name="OppositionStrength" origin="180 280">
+				<StaticText text="Opposition strength" origin="-110 0" font="data/textures/fonts/generic_normal_25" alignH="left" textColor="ffc5c2a8"/>
+				<StaticImage origin="0 -20">
+					<RenderObject2D texture="data/textures/gui/customization/menu_line.tga"/>
+				</StaticImage>
+
+				<StaticImage origin="0 -177">
+					<RenderObject2D texture="data/textures/gui/customization/menu_line.tga"/>
+				</StaticImage>
+
+				<Item origin="0 -56">
+					<Checkbox name="#opposition_check0" origin="110 0" stealFocus="true" defaultState="CheckedState">
+						<UncheckedState>
+							<RenderObject2D texture="data/textures/gui/menus/menu_radiobutton_normal.tga"/>
+							<ButtonText origin="-200 0" text="Random" font="data/textures/fonts/generic_normal_19" alignH="left" textColor="ffbb9f7d"/>
+
+							<OnHover>
+								<RenderObject2D texture="data/textures/gui/menus/menu_radiobutton_hover.tga"/>
+							</OnHover>
+
+							<OnClick>
+								<RenderObject2D texture="data/textures/gui/menus/menu_radiobutton_normal.tga"/>
+								<GUIAction type="Uncheck" target="#opposition_check1"/>
+								<GUIAction type="Uncheck" target="#opposition_check2"/>
+								<GUIAction type="Uncheck" target="#opposition_check3"/>
+								<GUIAction type="TriggerEvent" target="GUI_GAME_RMG_ENEMYSTRENGTH_CHANGED"/>
+							</OnClick>
+						</UncheckedState>
+
+						<CheckedState acceptInput="false">
+							<RenderObject2D texture="data/textures/gui/menus/menu_radiobutton_check.tga"/>
+							<ButtonText origin="-200 0" text="Random" font="data/textures/fonts/generic_normal_19" alignH="left" textColor="ffbb9f7d"/>
+						</CheckedState>
+					</Checkbox>
+
+					<Checkbox name="#opposition_check1" origin="110 -30" stealFocus="true" defaultState="UncheckedState">
+						<UncheckedState>
+							<RenderObject2D texture="data/textures/gui/menus/menu_radiobutton_normal.tga"/>
+							<ButtonText origin="-200 0" text="Light" font="data/textures/fonts/generic_normal_19" alignH="left" textColor="ffbb9f7d"/>
+
+							<OnHover>
+								<RenderObject2D texture="data/textures/gui/menus/menu_radiobutton_hover.tga"/>
+							</OnHover>
+
+							<OnClick>
+								<RenderObject2D texture="data/textures/gui/menus/menu_radiobutton_normal.tga"/>
+								<GUIAction type="Uncheck" target="#opposition_check0"/>
+								<GUIAction type="Uncheck" target="#opposition_check2"/>
+								<GUIAction type="Uncheck" target="#opposition_check3"/>
+								<GUIAction type="TriggerEvent" target="GUI_GAME_RMG_ENEMYSTRENGTH_CHANGED"/>
+							</OnClick>
+						</UncheckedState>
+
+						<CheckedState acceptInput="false">
+							<RenderObject2D texture="data/textures/gui/menus/menu_radiobutton_check.tga"/>
+							<ButtonText origin="-200 0" text="Light" font="data/textures/fonts/generic_normal_19" alignH="left" textColor="ffbb9f7d"/>
+						</CheckedState>
+					</Checkbox>
+
+					<Checkbox name="#opposition_check2" origin="110 -60" stealFocus="true" defaultState="UncheckedState">
+						<UncheckedState>
+							<RenderObject2D texture="data/textures/gui/menus/menu_radiobutton_normal.tga"/>
+							<ButtonText origin="-200 0" text="Medium" font="data/textures/fonts/generic_normal_19" alignH="left" textColor="ffbb9f7d"/>
+
+							<OnHover>
+								<RenderObject2D texture="data/textures/gui/menus/menu_radiobutton_hover.tga"/>
+							</OnHover>
+
+							<OnClick>
+								<RenderObject2D texture="data/textures/gui/menus/menu_radiobutton_normal.tga"/>
+								<GUIAction type="Uncheck" target="#opposition_check0"/>
+								<GUIAction type="Uncheck" target="#opposition_check1"/>
+								<GUIAction type="Uncheck" target="#opposition_check3"/>
+								<GUIAction type="TriggerEvent" target="GUI_GAME_RMG_ENEMYSTRENGTH_CHANGED"/>
+							</OnClick>
+						</UncheckedState>
+
+						<CheckedState acceptInput="false">
+							<RenderObject2D texture="data/textures/gui/menus/menu_radiobutton_check.tga"/>
+							<ButtonText origin="-200 0" text="Medium" font="data/textures/fonts/generic_normal_19" alignH="left" textColor="ffbb9f7d"/>
+						</CheckedState>
+					</Checkbox>
+
+					<Checkbox name="#opposition_check3" origin="110 -90" stealFocus="true" defaultState="UncheckedState">
+						<UncheckedState>
+							<RenderObject2D texture="data/textures/gui/menus/menu_radiobutton_normal.tga"/>
+							<ButtonText origin="-200 0" text="Heavy" font="data/textures/fonts/generic_normal_19" alignH="left" textColor="ffbb9f7d"/>
+
+							<OnHover>
+								<RenderObject2D texture="data/textures/gui/menus/menu_radiobutton_hover.tga"/>
+							</OnHover>
+
+							<OnClick>
+								<RenderObject2D texture="data/textures/gui/menus/menu_radiobutton_normal.tga"/>
+								<GUIAction type="Uncheck" target="#opposition_check0"/>
+								<GUIAction type="Uncheck" target="#opposition_check1"/>
+								<GUIAction type="Uncheck" target="#opposition_check2"/>
+								<GUIAction type="TriggerEvent" target="GUI_GAME_RMG_ENEMYSTRENGTH_CHANGED"/>
+							</OnClick>
+						</UncheckedState>
+
+						<CheckedState acceptInput="false">
+							<RenderObject2D texture="data/textures/gui/menus/menu_radiobutton_check.tga"/>
+							<ButtonText origin="-200 0" text="Heavy" font="data/textures/fonts/generic_normal_19" alignH="left" textColor="ffbb9f7d"/>
+						</CheckedState>
+					</Checkbox>
+				</Item>
+			</Item>	<!-- opposition strength -->
+
+			<!--
+			<Item name="Troops" origin="180 280">
+				<StaticText text="Troops" origin="-110 0" font="data/textures/fonts/generic_normal_25" alignH="left" textColor="ffc5c2a8"/>
+				<StaticImage origin="0 -20">
+					<RenderObject2D texture="data/textures/gui/customization/menu_line.tga"/>
+				</StaticImage>
+
+				<StaticImage origin="0 -177">
+					<RenderObject2D texture="data/textures/gui/customization/menu_line.tga"/>
+				</StaticImage>
+
+				<Item origin="0 -40">
+					<Checkbox name="#troops_check0" origin="110 0" stealFocus="true" defaultState="CheckedState">
+						<UncheckedState>
+							<RenderObject2D texture="data/textures/gui/menus/menu_radiobutton_normal.tga"/>
+							<ButtonText origin="-200 0" text="Random" font="data/textures/fonts/generic_normal_19" alignH="left" textColor="ff42423c"/>
+
+							<OnHover>
+								<RenderObject2D texture="data/textures/gui/menus/menu_radiobutton_hover.tga"/>
+							</OnHover>
+
+							<OnClick>
+								<RenderObject2D texture="data/textures/gui/menus/menu_radiobutton_normal.tga"/>
+								<GUIAction type="Uncheck" target="#troops_check1"/>
+								<GUIAction type="Uncheck" target="#troops_check2"/>
+								<GUIAction type="Uncheck" target="#troops_check3"/>
+								<GUIAction type="TriggerEvent" target="GUI_GAME_RMG_TROOPS_CHANGED"/>
+							</OnClick>
+						</UncheckedState>
+
+						<CheckedState acceptInput="false">
+							<RenderObject2D texture="data/textures/gui/menus/menu_radiobutton_check.tga"/>
+							<ButtonText origin="-200 0" text="Random" font="data/textures/fonts/generic_normal_19" alignH="left" textColor="ff42423c"/>
+						</CheckedState>
+					</Checkbox>
+
+					<Checkbox name="#troops_check1" acceptInput="false" origin="110 -30" stealFocus="true" defaultState="UncheckedState">
+						<UncheckedState>
+							<RenderObject2D texture="data/textures/gui/menus/menu_radiobutton_normal.tga"/>
+							<ButtonText origin="-200 0" text="2" font="data/textures/fonts/generic_normal_19" alignH="left" textColor="ff42423c"/>
+
+							<OnHover>
+								<RenderObject2D texture="data/textures/gui/menus/menu_radiobutton_hover.tga"/>
+							</OnHover>
+
+							<OnClick>
+								<RenderObject2D texture="data/textures/gui/menus/menu_radiobutton_normal.tga"/>
+								<GUIAction type="Uncheck" target="#troops_check0"/>
+								<GUIAction type="Uncheck" target="#troops_check2"/>
+								<GUIAction type="Uncheck" target="#troops_check3"/>
+								<GUIAction type="TriggerEvent" target="GUI_GAME_RMG_TROOPS_CHANGED"/>
+							</OnClick>
+						</UncheckedState>
+
+						<CheckedState acceptInput="false">
+							<RenderObject2D texture="data/textures/gui/menus/menu_radiobutton_check.tga"/>
+							<ButtonText origin="-200 0" text="2" font="data/textures/fonts/generic_normal_19" alignH="left" textColor="ff42423c"/>
+						</CheckedState>
+					</Checkbox>
+
+					<Checkbox name="#troops_check2" acceptInput="false" origin="110 -60" stealFocus="true" defaultState="UncheckedState">
+						<UncheckedState>
+							<RenderObject2D texture="data/textures/gui/menus/menu_radiobutton_normal.tga"/>
+							<ButtonText origin="-200 0" text="4" font="data/textures/fonts/generic_normal_19" alignH="left" textColor="ff42423c"/>
+
+							<OnHover>
+								<RenderObject2D texture="data/textures/gui/menus/menu_radiobutton_hover.tga"/>
+							</OnHover>
+
+							<OnClick>
+								<RenderObject2D texture="data/textures/gui/menus/menu_radiobutton_normal.tga"/>
+								<GUIAction type="Uncheck" target="#troops_check0"/>
+								<GUIAction type="Uncheck" target="#troops_check1"/>
+								<GUIAction type="Uncheck" target="#troops_check3"/>
+								<GUIAction type="TriggerEvent" target="GUI_GAME_RMG_TROOPS_CHANGED"/>
+							</OnClick>
+						</UncheckedState>
+
+						<CheckedState acceptInput="false">
+							<RenderObject2D texture="data/textures/gui/menus/menu_radiobutton_check.tga"/>
+							<ButtonText origin="-200 0" text="4" font="data/textures/fonts/generic_normal_19" alignH="left" textColor="ff42423c"/>
+						</CheckedState>
+					</Checkbox>
+
+					<Checkbox name="#troops_check3" acceptInput="false" origin="110 -90" stealFocus="true" defaultState="UncheckedState">
+						<UncheckedState>
+							<RenderObject2D texture="data/textures/gui/menus/menu_radiobutton_normal.tga"/>
+							<ButtonText origin="-200 0" text="6" font="data/textures/fonts/generic_normal_19" alignH="left" textColor="ff42423c"/>
+
+							<OnHover>
+								<RenderObject2D texture="data/textures/gui/menus/menu_radiobutton_hover.tga"/>
+							</OnHover>
+
+							<OnClick>
+								<RenderObject2D texture="data/textures/gui/menus/menu_radiobutton_normal.tga"/>
+								<GUIAction type="Uncheck" target="#troops_check0"/>
+								<GUIAction type="Uncheck" target="#troops_check1"/>
+								<GUIAction type="Uncheck" target="#troops_check2"/>
+								<GUIAction type="TriggerEvent" target="GUI_GAME_RMG_TROOPS_CHANGED"/>
+							</OnClick>
+						</UncheckedState>
+
+						<CheckedState acceptInput="false">
+							<RenderObject2D texture="data/textures/gui/menus/menu_radiobutton_check.tga"/>
+							<ButtonText origin="-200 0" text="6" font="data/textures/fonts/generic_normal_19" alignH="left" textColor="ff42423c"/>
+						</CheckedState>
+					</Checkbox>
+
+					<Checkbox name="#troops_check4" acceptInput="false" origin="110 -120" stealFocus="true" defaultState="UncheckedState">
+						<UncheckedState>
+							<RenderObject2D texture="data/textures/gui/menus/menu_radiobutton_normal.tga"/>
+							<ButtonText origin="-200 0" text="8" font="data/textures/fonts/generic_normal_19" alignH="left" textColor="ff42423c"/>
+
+							<OnHover>
+								<RenderObject2D texture="data/textures/gui/menus/menu_radiobutton_hover.tga"/>
+							</OnHover>
+
+							<OnClick>
+								<RenderObject2D texture="data/textures/gui/menus/menu_radiobutton_normal.tga"/>
+								<GUIAction type="Uncheck" target="#troops_check0"/>
+								<GUIAction type="Uncheck" target="#troops_check1"/>
+								<GUIAction type="Uncheck" target="#troops_check2"/>
+								<GUIAction type="TriggerEvent" target="GUI_GAME_RMG_TROOPS_CHANGED"/>
+							</OnClick>
+						</UncheckedState>
+
+						<CheckedState acceptInput="false">
+							<RenderObject2D texture="data/textures/gui/menus/menu_radiobutton_check.tga"/>
+							<ButtonText origin="-200 0" text="8" font="data/textures/fonts/generic_normal_19" alignH="left" textColor="ff42423c"/>
+						</CheckedState>
+					</Checkbox>
+				</Item>
+			</Item>
+			-->
+
+			<Item name="OtherOptions" origin="-180 43">
+				<StaticText text="Other options" origin="-110 0" font="data/textures/fonts/generic_normal_25" alignH="left" textColor="ffc5c2a8"/>
+				<StaticImage origin="0 -20">
+					<RenderObject2D texture="data/textures/gui/customization/menu_line.tga"/>
+				</StaticImage>
+
+				<Item origin="0 -40">
+					<Checkbox name="#otheroptions_check0" origin="110 0" stealFocus="true" defaultState="UncheckedState">
+						<UncheckedState>
+							<RenderObject2D texture="data/textures/gui/menus/menu_radiobutton_normal.tga"/>
+							<ButtonText origin="-200 0" text="No visual intel" font="data/textures/fonts/generic_normal_19" alignH="left" textColor="ffbb9f7d"/>
+
+							<OnHover>
+								<RenderObject2D texture="data/textures/gui/menus/menu_radiobutton_hover.tga"/>
+							</OnHover>
+
+							<OnClick>
+								<RenderObject2D texture="data/textures/gui/menus/menu_radiobutton_normal.tga"/>
+								<GUIAction type="TriggerEvent" target="GUI_GAME_RMG_OTHER_OPTIONS"/>
+							</OnClick>
+						</UncheckedState>
+
+						<CheckedState>
+							<RenderObject2D texture="data/textures/gui/menus/menu_radiobutton_check.tga"/>
+							<ButtonText origin="-200 0" text="No visual intel" font="data/textures/fonts/generic_normal_19" alignH="left" textColor="ffbb9f7d"/>
+
+							<OnClick>
+								<GUIAction type="TriggerEvent" target="GUI_GAME_RMG_OTHER_OPTIONS"/>
+							</OnClick>
+						</CheckedState>
+					</Checkbox>
+
+					<!--
+					<Checkbox name="#otheroptions_check1" origin="110 -33" stealFocus="true" acceptInput="false" defaultState="UncheckedState">
+						<UncheckedState>
+							<RenderObject2D texture="data/textures/gui/menus/menu_radiobutton_normal.tga"/>
+							<ButtonText origin="-200 0" text="Sniper support" font="data/textures/fonts/generic_normal_19" alignH="left" textColor="ff42423c"/>
+
+							<OnHover>
+								<RenderObject2D texture="data/textures/gui/menus/menu_radiobutton_hover.tga"/>
+							</OnHover>
+
+							<OnClick>
+								<RenderObject2D texture="data/textures/gui/menus/menu_radiobutton_normal.tga"/>
+							</OnClick>
+						</UncheckedState>
+
+						<CheckedState acceptInput="false">
+							<RenderObject2D texture="data/textures/gui/menus/menu_radiobutton_check.tga"/>
+							<ButtonText origin="-200 0" text="Sniper support" font="data/textures/fonts/generic_normal_19" alignH="left" textColor="ffbb9f7d"/>
+						</CheckedState>
+					</Checkbox>
+					-->
+				</Item>
+			</Item>	<!-- Other options -->
+		</StaticImage>
+	</Item>
+
+	<!-- back button -->
+	<Button name="Menu_MissionSelect_Back" origin="-400 -400">
+		<RenderObject2D texture="data/textures/gui/menus/menu_button_normal.tga"/>
+		<ButtonText text="Back" font="data/textures/fonts/generic_normal_25" textColor="ffbb9f7d"/>
+		<OnHover>
+			<RenderObject2D texture="data/textures/gui/menus/menu_button_hover.tga"/>
+			<ButtonText text="Back" font="data/textures/fonts/generic_normal_25" textColor="ffffffff"/>
+		</OnHover>
+		<OnClick>
+			<RenderObject2D texture="data/textures/gui/menus/menu_button_normal.tga"/>
+			<GUIAction type="Hide" target="Menu_MissionSelect"/>
+			<GUIAction type="TriggerEvent" target="GUI_GAME_CLOSE_SINGLEMISSIONS"/>
+		</OnClick>
+	</Button>
+</Item>
+
+<Item name="Menu_MissionSelect_Briefing" origin="960 540" hidden="true">
+	<OnOpen>
+		<GUIAction type="TriggerEvent" target="GUI_CAPTURE_INPUT"/>
+		<GUIAction type="SetForeground" target="Menu_MissionSelect_Briefing"/>
+	</OnOpen>
+
+	<OnClose>
+		<GUIAction type="TriggerEvent" target="GUI_RELEASE_INPUT"/>
+	</OnClose>
+
+	<OnKeyDown rangeStart="0x1B" rangeEnd="0x1B">
+		<GUIAction type="Click" target="Briefing_Back"/>
+	</OnKeyDown>
+
+	<StaticImage>
+		<RenderObject2D texture="data/textures/gui/menus/menu_pause_black.tga" sizeX="1920" sizeY="670" color="7f7f7f7f"/>
+	</StaticImage>
+
+	<StaticImage origin="-348 0">
+		<RenderObject2D texture="data/textures/gui/menus/background3D/menu.dds"/>
+	</StaticImage>
+
+	<StaticImage origin="0 439">
+		<RenderObject2D texture="data/textures/gui/menus/menu_black_background.tga" sizeX="1920" sizeY="202" blendMode="none"/>
+
+		<StaticText origin="-370 -69" text="Briefing" font="data/textures/fonts/generic_normal_38" textColor="ffbb9f7d"/>
+	</StaticImage>
+
+	<StaticImage origin="0 -439">
+		<RenderObject2D texture="data/textures/gui/menus/menu_black_background.tga" sizeX="1920" sizeY="202" blendMode="none"/>
+	</StaticImage>
+
+	<StaticImage origin="0 323">
+		<RenderObject2D texture="data/textures/gui/menus/menu_background_lineup.tga"/>
+	</StaticImage>
+
+	<StaticImage origin="0 -323">
+		<RenderObject2D texture="data/textures/gui/menus/menu_background_linedown.tga"/>
+	</StaticImage>
+
+	<Item name="Menu_Background" origin="0 0">
+		<Item origin="0 255">
+			<Button name="Briefing_ThreeStars" origin="0 0" hidden="true">
+				<RenderObject2D texture="data/textures/gui/menus/menu_star3.tga"/>
+				<ButtonText text="" font="data/textures/fonts/generic_normal_25" textColor="ffbb9f7d"/>
+				<OnHover>
+					<RenderObject2D texture="data/textures/gui/menus/menu_star3.tga" scaleX="1.2" scaleY="1.2"/>
+					<ButtonText text="" font="data/textures/fonts/generic_normal_25" textColor="ffffffff"/>
+				</OnHover>
+				<OnClick>
+					<RenderObject2D texture="data/textures/gui/menus/menu_star3.tga"/>
+					<GUIAction type="TriggerEvent" target="GUI_GAME_DETAILED_STATS_BRIEFING"/>
+					<GUIAction type="Show" target="DetailedStatistics_Briefing" />
+				</OnClick>
+			</Button>
+
+			<Button name="Briefing_TwoStars" origin="0 0" hidden="true">
+				<RenderObject2D texture="data/textures/gui/menus/menu_star2.tga"/>
+				<ButtonText text="" font="data/textures/fonts/generic_normal_25" textColor="ffbb9f7d"/>
+				<OnHover>
+					<RenderObject2D scaleX="1.2" scaleY="1.2" texture="data/textures/gui/menus/menu_star2.tga"/>
+					<ButtonText text="" font="data/textures/fonts/generic_normal_25" textColor="ffffffff"/>
+				</OnHover>
+				<OnClick>
+					<RenderObject2D texture="data/textures/gui/menus/menu_star2.tga"/>
+					<GUIAction type="TriggerEvent" target="GUI_GAME_DETAILED_STATS_BRIEFING"/>
+					<GUIAction type="Show" target="DetailedStatistics_Briefing" />
+				</OnClick>
+			</Button>
+
+			<Button name="Briefing_OneStar" origin="0 0" hidden="true">
+				<RenderObject2D texture="data/textures/gui/menus/menu_star1.tga"/>
+				<ButtonText text="" font="data/textures/fonts/generic_normal_25" textColor="ffbb9f7d"/>
+				<OnHover>
+					<RenderObject2D scaleX="1.2" scaleY="1.2" texture="data/textures/gui/menus/menu_star1.tga"/>
+					<ButtonText text="" font="data/textures/fonts/generic_normal_25" textColor="ffffffff"/>
+				</OnHover>
+				<OnClick>
+					<RenderObject2D texture="data/textures/gui/menus/menu_star1.tga"/>
+					<GUIAction type="TriggerEvent" target="GUI_GAME_DETAILED_STATS_BRIEFING"/>
+					<GUIAction type="Show" target="DetailedStatistics_Briefing" />
+				</OnClick>
+			</Button>
+
+			<Button name="Briefing_ZeroStars" origin="0 0" hidden="true">
+				<RenderObject2D texture="data/textures/gui/menus/menu_star0.tga"/>
+				<ButtonText text="" font="data/textures/fonts/generic_normal_25" textColor="ffbb9f7d"/>
+				<OnHover>
+					<RenderObject2D scaleX="1.2" scaleY="1.2" texture="data/textures/gui/menus/menu_star0.tga"/>
+					<ButtonText text="" font="data/textures/fonts/generic_normal_25" textColor="ffffffff"/>
+				</OnHover>
+				<OnClick>
+					<RenderObject2D texture="data/textures/gui/menus/menu_star0.tga"/>
+					<GUIAction type="TriggerEvent" target="GUI_GAME_DETAILED_STATS_BRIEFING"/>
+					<GUIAction type="Show" target="DetailedStatistics_Briefing" />
+				</OnClick>
+			</Button>
+		</Item>
+
+		<Item origin="0 0">
+			<StaticText name="MissionName" origin="0 290" text="Level1: Mission Name Long Name" font="data/textures/fonts/generic_normal_38" textColor="ffc5c2a8"/>
+		</Item>
+
+		<StaticImage origin="0 320">
+			<RenderObject2D texture="data/textures/gui/menus/menu_missionselect_line.tga"/>
+		</StaticImage>
+
+		<StaticImage name="MissionBriefingBackground" origin="0 0" ignoreFocus="true">
+			<RenderObject2D texture="data/textures/gui/menus/menu_brief_background.tga"/>
+
+			<StaticImage origin="-210 0" ignoreFocus="true">
+				<RenderObject2D texture="data/textures/gui/menus/menu_brief_mission_background.tga"/>
+			</StaticImage>
+
+			<!-- this is changed dynamically by the game with the thumbnail for each level -->
+			<StaticImage name="MissionBriefingImage" origin="-210 0" ignoreFocus="true">
+				<RenderObject2D texture="data/textures/background/killhouse1r1d_thumb.dds" scaleX="1.05" scaleY="1.05"/>
+			</StaticImage>
+
+			<!-- was originally at 50y -->
+			<StaticImage name="MissionBriefing_Challenges" origin="-535 42" hidden="true">
+				<StaticImage origin="0 0" tooltip="Challenge: use only one trooper" stealFocus="true">
+					<RenderObject2D texture="data/textures/gui/menus/challenges/oneman_blue_grey.tga"/>
+					<StaticImage name="MissionChallenges_OneMan" hidden="true">
+						<RenderObject2D texture="data/textures/gui/menus/challenges/oneman_blue.tga"/>
+					</StaticImage>
+				</StaticImage>
+				<StaticImage origin="0 -45" tooltip="Challenge: complete mission without pausing, in real-time" stealFocus="true">
+					<RenderObject2D texture="data/textures/gui/menus/challenges/nopause_blue_grey.tga"/>
+					<StaticImage name="MissionChallenges_NoPause" hidden="true">
+						<RenderObject2D texture="data/textures/gui/menus/challenges/nopause_blue.tga"/>
+					</StaticImage>
+				</StaticImage>
+				<StaticImage origin="0 -90" tooltip="Challenge: use a single plan to complete the mission" stealFocus="true">
+					<RenderObject2D texture="data/textures/gui/menus/challenges/oneplan_blue_grey.tga"/>
+					<StaticImage name="MissionChallenges_OnePlan" hidden="true">
+						<RenderObject2D texture="data/textures/gui/menus/challenges/oneplan_blue.tga"/>
+					</StaticImage>
+				</StaticImage>
+				<!--
+				<StaticImage origin="0 -90" tooltip="Challenge: complete mission without being detected" stealFocus="true">
+					<RenderObject2D texture="data/textures/gui/menus/challenges/stealth_grey.tga" scaleX="0.6" scaleY="0.6"/>
+					<StaticImage name="MissionChallenges_Stealth" hidden="true">
+						<RenderObject2D texture="data/textures/gui/menus/challenges/stealth_blue.tga" scaleX="0.6" scaleY="0.6"/>
+					</StaticImage>
+				</StaticImage>
+				-->
+			</StaticImage>
+
+			<Item name="MissionDescPanel" origin="160 0">
+				<StaticImage name="MissionIcon_#ClearHostiles" origin="0 190" hidden="true">
+					<RenderObject2D texture="data/textures/gui/menus/menu_missiontype_clear.tga"/>
+				</StaticImage>
+				<StaticImage name="MissionIcon_#BombDefusal" origin="0 190" hidden="true">
+					<RenderObject2D texture="data/textures/gui/menus/menu_missiontype_defuse.tga"/>
+				</StaticImage>
+				<StaticImage name="MissionIcon_#StopExecution" origin="0 190" hidden="true">
+					<RenderObject2D texture="data/textures/gui/menus/menu_missiontype_execution.tga"/>
+				</StaticImage>
+				<StaticImage name="MissionIcon_#HostageRescue" origin="0 190" hidden="true">
+					<RenderObject2D texture="data/textures/gui/menus/menu_missiontype_hostage.tga"/>
+				</StaticImage>
+				<StaticImage name="MissionIcon_#ArrestWarrant" origin="0 190" hidden="true">
+					<RenderObject2D texture="data/textures/gui/menus/menu_missiontype_arrest.tga"/>
+				</StaticImage>
+				<StaticImage name="MissionIcon_#ProtectVIP" origin="0 190" hidden="true">
+					<RenderObject2D texture="data/textures/gui/menus/menu_missiontype_vip.tga"/>
+				</StaticImage>
+				<StaticImage name="MissionIcon_#DopeRaid" origin="0 190" hidden="true">
+					<RenderObject2D texture="data/textures/gui/menus/menu_missiontype_drugs.tga"/>
+				</StaticImage>
+
+				<StaticText name="MissionTypeName" origin="30 190" text="Mission Type" alignH="left" font="data/textures/fonts/generic_normal_38" textColor="ffdc9841"/>
+
+				<StaticImage origin="180 140">
+					<RenderObject2D texture="data/textures/gui/menus/menu_brief_line.tga"/>
+
+					<StaticText origin="0 0" text="     Objectives" alignH="left" font="data/textures/fonts/generic_normal_25" textColor="ffdc9841"/>
+
+					<StaticText name="ObjectiveText1" origin="40 -40" text="" alignH="left" font="data/textures/fonts/generic_normal_17" textColor="ffbb9f7d"/>
+					<StaticText name="ObjectiveText2" origin="40 -70" text="" alignH="left" font="data/textures/fonts/generic_normal_17" textColor="ffbb9f7d"/>
+					<StaticText name="ObjectiveText3" origin="40 -100" text="" alignH="left" font="data/textures/fonts/generic_normal_17" textColor="ffbb9f7d"/>
+				</StaticImage>
+
+				<StaticImage origin="180 10">
+					<RenderObject2D texture="data/textures/gui/menus/menu_brief_line.tga"/>
+
+					<StaticText origin="0 0" text="     Intel" alignH="left" font="data/textures/fonts/generic_normal_25" textColor="ffdc9841"/>
+
+					<!-- these are here only for cloning purposes, they are added dinamically from the game inside "IntelTangos" -->
+					<StaticImage name="IntelKnownTango" origin="-190 -35" hidden="true">
+						<RenderObject2D texture="data/textures/gui/menus/menu_brief_badguy.tga"/>
+					</StaticImage>
+
+					<StaticImage name="IntelUncertainTango" origin="-190 -35" hidden="true">
+						<RenderObject2D texture="data/textures/gui/menus/menu_brief_badguy_uncertain.tga"/>
+					</StaticImage>
+
+					<StaticImage name="IntelWarrantTango" origin="-190 -35" hidden="true">
+						<RenderObject2D texture="data/textures/gui/menus/menu_brief_badguy_warrant.tga"/>
+					</StaticImage>
+
+					<StaticImage name="IntelKnownHostage" origin="-190 -35" hidden="true">
+						<RenderObject2D texture="data/textures/gui/menus/menu_brief_hostage.tga"/>
+					</StaticImage>
+					<!-- -->
+
+					<StaticText name="IntelTangos" origin="40 -35" text="Tangos" alignH="left" font="data/textures/fonts/generic_normal_17" textColor="ffbb9f7d">
+						<!-- game adds here dynamically for each map -->
+					</StaticText>
+
+					<StaticText name="IntelArrestWarrants" origin="40 -165" text="Warrants" alignH="left" font="data/textures/fonts/generic_normal_17" textColor="ffbb9f7d">
+						<!-- game adds here dynamically for each map -->
+					</StaticText>
+
+					<StaticText name="IntelHostages" origin="40 -165" text="Hostages" alignH="left" font="data/textures/fonts/generic_normal_17" textColor="ffbb9f7d">
+						<!-- game adds here dynamically for each map -->
+					</StaticText>
+				</StaticImage>
+			</Item>
+		</StaticImage>
+
+		<StaticText origin="660 0" text="Random seed" font="data/textures/fonts/generic_normal_25" textColor="ffbb9f7d">
+			<StaticText name="#RandomSeed" origin="0 -30" text="FFFFFFFF0000" font="data/textures/fonts/generic_normal_25" textColor="ffc5c2a8"/>
+		</StaticText>
+
+		<StaticImage origin="0 -320">
+			<RenderObject2D texture="data/textures/gui/menus/menu_missionselect_line.tga"/>
+		</StaticImage>
+	</Item>
+
+	<StaticImage origin="1100 -830" sizeX="1" sizeY="1">
+		<RenderObject2D texture="data/textures/fx/police_light.tga" blendMode="add" layer="18" color="0xffC80000" scaleX="25" scaleY="12">
+			<TextureAnimation frameWidth="128" frameHeight="128" startFrame="11" endFrame="0" animationTimeMS="1200" numLoops="-1" randomizeStartTime="false"/>
+		</RenderObject2D>
+	</StaticImage>
+
+	<StaticImage origin="1100 830" sizeX="1" sizeY="1">
+		<RenderObject2D texture="data/textures/fx/police_light.tga" blendMode="add" layer="18" color="0xff0000C8" scaleX="25" scaleY="12">
+			<TextureAnimation frameWidth="128" frameHeight="128" startFrame="0" endFrame="11" animationTimeMS="1200" numLoops="-1" randomizeStartTime="false"/>
+		</RenderObject2D>
+	</StaticImage>
+
+	<Button name="Briefing_Back" origin="-400 -400">
+		<RenderObject2D texture="data/textures/gui/menus/menu_button_normal.tga"/>
+		<ButtonText text="Back" font="data/textures/fonts/generic_normal_25" textColor="ffbb9f7d"/>
+
+		<OnHover>
+			<RenderObject2D texture="data/textures/gui/menus/menu_button_hover.tga"/>
+			<ButtonText text="Back" font="data/textures/fonts/generic_normal_25" textColor="ffffffff"/>
+		</OnHover>
+
+		<OnClick>
+			<RenderObject2D texture="data/textures/gui/menus/menu_button_normal.tga"/>
+			<GUIAction type="Hide" target="Menu_MissionSelect_Briefing"/>
+		</OnClick>
+	</Button>
+
+	<Button name="Briefing_GO" origin="400 -400">
+		<RenderObject2D texture="data/textures/gui/menus/menu_button_normal.tga"/>
+		<ButtonText text="Go!" font="data/textures/fonts/generic_normal_25" textColor="ffbb9f7d"/>
+
+		<OnHover>
+			<RenderObject2D texture="data/textures/gui/menus/menu_button_hover.tga"/>
+			<ButtonText text="Go!" font="data/textures/fonts/generic_normal_25" textColor="ffffffff"/>
+		</OnHover>
+
+		<OnClick>
+			<RenderObject2D texture="data/textures/gui/menus/menu_button_normal.tga"/>
+			<GUIAction type="Hide" target="Menu_MissionSelect_Briefing"/>
+			<GUIAction type="TriggerEvent" target="GUI_GAME_SINGLE_MISSION_START"/>
+		</OnClick>
+	</Button>
+</Item>
+
+
+<!-- helpers -->
+<Item name="Menu_Help_MainMenu" hidden="true">
+	<OnOpen>
+		<GUIAction type="Show" target="Menu_Help"/>
+	</OnOpen>
+
+	<OnClose>
+		<GUIAction type="Hide" target="Menu_Help"/>
+		<GUIAction type="Show" target="Menu_Main"/>
+	</OnClose>
+</Item>
+
+<Item name="Menu_Help_InGame" hidden="true">
+	<OnOpen>
+		<GUIAction type="Show" target="Menu_Help"/>
+	</OnOpen>
+
+	<OnClose>
+		<GUIAction type="Hide" target="Menu_Help"/>
+		<GUIAction type="Show" target="Menu_InGame"/>
+	</OnClose>
+</Item>
+
+<Item name="Menu_Help_F1" hidden="true">
+	<OnOpen>
+		<GUIAction type="Show" target="Menu_Help"/>
+	</OnOpen>
+
+	<OnClose>
+		<GUIAction type="Hide" target="Menu_Help"/>
+	</OnClose>
+</Item>
+
+<Item name="Menu_Help" origin="960 540" hidden="true">
+	<OnOpen>
+		<GUIAction type="TriggerEvent" target="GUI_CAPTURE_INPUT"/>
+		<GUIAction type="Hide" target="Menu_Help_Page8"/>
+		<GUIAction type="Hide" target="Menu_Help_Page7"/>
+		<GUIAction type="Hide" target="Menu_Help_Page6"/>
+		<GUIAction type="Hide" target="Menu_Help_Page5"/>
+		<GUIAction type="Hide" target="Menu_Help_Page4"/>
+		<GUIAction type="Hide" target="Menu_Help_Page3"/>
+		<GUIAction type="Hide" target="Menu_Help_Page2"/>
+		<GUIAction type="Show" target="Menu_Help_Page1"/>
+		<GUIAction type="SetForeground" target="Menu_Help"/>
+	</OnOpen>
+
+	<OnClose>
+		<GUIAction type="TriggerEvent" target="GUI_RELEASE_INPUT"/>
+		<GUIAction type="Hide" target="Menu_Help_Page8"/>
+		<GUIAction type="Hide" target="Menu_Help_Page7"/>
+		<GUIAction type="Hide" target="Menu_Help_Page6"/>
+		<GUIAction type="Hide" target="Menu_Help_Page5"/>
+		<GUIAction type="Hide" target="Menu_Help_Page4"/>
+		<GUIAction type="Hide" target="Menu_Help_Page3"/>
+		<GUIAction type="Hide" target="Menu_Help_Page2"/>
+		<GUIAction type="Hide" target="Menu_Help_Page1"/>
+	</OnClose>
+
+	<OnKeyDown rangeStart="0x1B" rangeEnd="0x1B">
+		<GUIAction type="Click" target="Menu_Help_Back"/>
+	</OnKeyDown>
+
+	<StaticImage>
+		<RenderObject2D texture="data/textures/gui/menus/menu_pause_black.tga" sizeX="1920" sizeY="670" color="7f7f7f7f"/>
+	</StaticImage>
+
+	<StaticImage origin="-348 0">
+		<RenderObject2D texture="data/textures/gui/menus/background3D/menu.dds"/>
+	</StaticImage>
+
+	<StaticImage origin="0 439">
+		<RenderObject2D texture="data/textures/gui/menus/menu_black_background.tga" sizeX="1920" sizeY="202" blendMode="none"/>
+
+		<StaticText origin="-370 -69" text="How to Play" font="data/textures/fonts/generic_normal_38" textColor="ffbb9f7d"/>
+	</StaticImage>
+
+	<StaticImage origin="0 -439">
+		<RenderObject2D texture="data/textures/gui/menus/menu_black_background.tga" sizeX="1920" sizeY="202" blendMode="none"/>
+
+		<!-- back button -->
+		<Button name="Menu_Help_Back" origin="-400 39">
+			<RenderObject2D texture="data/textures/gui/menus/menu_button_normal.tga"/>
+			<ButtonText text="Back" font="data/textures/fonts/generic_normal_25" textColor="ffbb9f7d"/>
+			<OnHover>
+				<RenderObject2D texture="data/textures/gui/menus/menu_button_hover.tga"/>
+				<ButtonText text="Back" font="data/textures/fonts/generic_normal_25" textColor="ffffffff"/>
+			</OnHover>
+			<OnClick>
+				<RenderObject2D texture="data/textures/gui/menus/menu_button_normal.tga"/>
+				<GUIAction type="Hide" target="Menu_Help_InGame"/>
+				<GUIAction type="Hide" target="Menu_Help_MainMenu"/>
+				<GUIAction type="Hide" target="Menu_Help_F1"/>
+			</OnClick>
+		</Button>
+	</StaticImage>
+
+	<StaticImage origin="0 323">
+		<RenderObject2D texture="data/textures/gui/menus/menu_background_lineup.tga"/>
+	</StaticImage>
+
+	<StaticImage origin="0 -323">
+		<RenderObject2D texture="data/textures/gui/menus/menu_background_linedown.tga"/>
+	</StaticImage>
+
+	<StaticImage name="Menu_Background" origin="0 0">
+		<RenderObject2D texture="data/textures/gui/menus/tutorial_background.dds"/>
+
+		<StaticImage origin="0 320">
+			<RenderObject2D texture="data/textures/gui/menus/menu_missionselect_line.tga"/>
+		</StaticImage>
+
+		<StaticImage origin="0 -320">
+			<RenderObject2D texture="data/textures/gui/menus/menu_missionselect_line.tga"/>
+		</StaticImage>
+
+ 		<Movie name="Menu_Help_Page1" origin="0 -80" sizeX="1" sizeY="1" file="data/movies/help_page1.ogv" fps="0" hidden="true">
+			<StaticText text="BASIC CONTROLS" origin="0 360" alignH="center" font="data/textures/fonts/generic_normal_38" textColor="ffe9cba8"/>
+
+			<Item origin="-380 290">
+				<StaticText text="LClick to move troopers." origin="0 0" alignH="left" font="data/textures/fonts/generic_normal_19" textColor="ffe9cba8"/>
+				<StaticText text="RClick to look around." origin="0 -20" alignH="left" font="data/textures/fonts/generic_normal_19" textColor="ffe9cba8"/>
+				<StaticText text="RClick + Ctrl to lock orientation (strafe)." origin="0 -40" alignH="left" font="data/textures/fonts/generic_normal_19" textColor="ffe9cba8"/>
+				<StaticText text="Click to stop in place." origin="0 -60" alignH="left" font="data/textures/fonts/generic_normal_19" textColor="ffe9cba8"/>
+				<StaticText text="(same commands can be applied to the path in advance)" origin="0 -85" alignH="left" font="data/textures/fonts/generic_normal_19" textColor="ffe9cba8"/>
+			</Item>
+
+			<Button name="Menu_Help_NextPageButton" origin="600 80" sizeX="160" sizeY="160">
+				<RenderObject2D texture="data/textures/gui/menus/menu_arrowright_normal.tga"/>
+				<ButtonText text="Next" alignH="left" font="data/textures/fonts/generic_normal_25" textColor="ffbb9f7d"/>
+				<OnHover>
+					<RenderObject2D texture="data/textures/gui/menus/menu_arrowright_hover.tga"/>
+				</OnHover>
+				<OnClick>
+					<RenderObject2D texture="data/textures/gui/menus/menu_arrowright_normal.tga"/>
+					<GUIAction type="Hide" target="Menu_Help_Page1"/>
+					<GUIAction type="Show" target="Menu_Help_Page2"/>
+				</OnClick>
+			</Button>
+		</Movie>
+
+ 		<Movie name="Menu_Help_Page2" origin="0 -80" sizeX="1" sizeY="1" file="data/movies/help_page2.ogv" fps="0" hidden="true">
+			<StaticText text="DOOR INTERACTION" origin="0 360" alignH="center" font="data/textures/fonts/generic_normal_38" textColor="ffe9cba8"/>
+
+			<Item origin="-380 290">
+				<StaticText text="Drag path through door to open." origin="0 0" alignH="left" font="data/textures/fonts/generic_normal_19" textColor="ffe9cba8"/>
+				<StaticText text="Can also open from the side." origin="0 -20" alignH="left" font="data/textures/fonts/generic_normal_19" textColor="ffe9cba8"/>
+				<StaticText text="RClick on waypoint to choose entry method." origin="0 -40" alignH="left" font="data/textures/fonts/generic_normal_19" textColor="ffe9cba8"/>
+			</Item>
+
+			<Button name="Menu_Help_PrevPageButton" origin="-600 80" sizeX="160" sizeY="160">
+				<RenderObject2D texture="data/textures/gui/menus/menu_arrowleft_normal.tga"/>
+				<ButtonText text="Prev" alignH="right" font="data/textures/fonts/generic_normal_25" textColor="ffbb9f7d"/>
+				<OnHover>
+					<RenderObject2D texture="data/textures/gui/menus/menu_arrowleft_hover.tga"/>
+				</OnHover>
+				<OnClick>
+					<RenderObject2D texture="data/textures/gui/menus/menu_arrowleft_normal.tga"/>
+					<GUIAction type="Hide" target="Menu_Help_Page2"/>
+					<GUIAction type="Show" target="Menu_Help_Page1"/>
+				</OnClick>
+			</Button>
+
+			<Button name="Menu_Help_NextPageButton" origin="600 80" sizeX="160" sizeY="160">
+				<RenderObject2D texture="data/textures/gui/menus/menu_arrowright_normal.tga"/>
+				<ButtonText text="Next" alignH="left" font="data/textures/fonts/generic_normal_25" textColor="ffbb9f7d"/>
+				<OnHover>
+					<RenderObject2D texture="data/textures/gui/menus/menu_arrowright_hover.tga"/>
+				</OnHover>
+				<OnClick>
+					<RenderObject2D texture="data/textures/gui/menus/menu_arrowright_normal.tga"/>
+					<GUIAction type="Hide" target="Menu_Help_Page2"/>
+					<GUIAction type="Show" target="Menu_Help_Page3"/>
+				</OnClick>
+			</Button>
+		</Movie>
+
+ 		<Movie name="Menu_Help_Page3" origin="0 -80" sizeX="1" sizeY="1" file="data/movies/help_page3.ogv" fps="0" hidden="true">
+			<StaticText text="TACTICAL ACTIONS" origin="0 360" alignH="center" font="data/textures/fonts/generic_normal_38" textColor="ffe9cba8"/>
+
+			<Item origin="-380 290">
+				<StaticText text="RClick on trooper to choose from available options." origin="0 0" alignH="left" font="data/textures/fonts/generic_normal_19" textColor="ffe9cba8"/>
+				<StaticText text="RClick anywhere on the path to plan in advance." origin="0 -20" alignH="left" font="data/textures/fonts/generic_normal_19" textColor="ffe9cba8"/>
+			</Item>
+
+			<Button name="Menu_Help_PrevPageButton" origin="-600 80" sizeX="160" sizeY="160">
+				<RenderObject2D texture="data/textures/gui/menus/menu_arrowleft_normal.tga"/>
+				<ButtonText text="Prev" alignH="right" font="data/textures/fonts/generic_normal_25" textColor="ffbb9f7d"/>
+				<OnHover>
+					<RenderObject2D texture="data/textures/gui/menus/menu_arrowleft_hover.tga"/>
+				</OnHover>
+				<OnClick>
+					<RenderObject2D texture="data/textures/gui/menus/menu_arrowleft_normal.tga"/>
+					<GUIAction type="Hide" target="Menu_Help_Page3"/>
+					<GUIAction type="Show" target="Menu_Help_Page2"/>
+				</OnClick>
+			</Button>
+
+			<Button name="Menu_Help_NextPageButton" origin="600 80" sizeX="160" sizeY="160">
+				<RenderObject2D texture="data/textures/gui/menus/menu_arrowright_normal.tga"/>
+				<ButtonText text="Next" alignH="left" font="data/textures/fonts/generic_normal_25" textColor="ffbb9f7d"/>
+				<OnHover>
+					<RenderObject2D texture="data/textures/gui/menus/menu_arrowright_hover.tga"/>
+				</OnHover>
+				<OnClick>
+					<RenderObject2D texture="data/textures/gui/menus/menu_arrowright_normal.tga"/>
+					<GUIAction type="Hide" target="Menu_Help_Page3"/>
+					<GUIAction type="Show" target="Menu_Help_Page4"/>
+				</OnClick>
+			</Button>
+		</Movie>
+
+ 		<Movie name="Menu_Help_Page4" origin="0 -80" sizeX="1" sizeY="1" file="data/movies/help_page4.ogv" fps="0" hidden="true">
+			<StaticText text="MODIFYING THE PATH" origin="0 360" alignH="center" font="data/textures/fonts/generic_normal_38" textColor="ffe9cba8"/>
+
+			<Item origin="-380 290">
+				<StaticText text="RClick and choose delete to remove parts of the path." origin="0 0" alignH="left" font="data/textures/fonts/generic_normal_19" textColor="ffe9cba8"/>
+				<StaticText text="LClick and drag anywhere on the path to reshape." origin="0 -20" alignH="left" font="data/textures/fonts/generic_normal_19" textColor="ffe9cba8"/>
+			</Item>
+
+			<Button name="Menu_Help_PrevPageButton" origin="-600 80" sizeX="160" sizeY="160">
+				<RenderObject2D texture="data/textures/gui/menus/menu_arrowleft_normal.tga"/>
+				<ButtonText text="Prev" alignH="right" font="data/textures/fonts/generic_normal_25" textColor="ffbb9f7d"/>
+				<OnHover>
+					<RenderObject2D texture="data/textures/gui/menus/menu_arrowleft_hover.tga"/>
+				</OnHover>
+				<OnClick>
+					<RenderObject2D texture="data/textures/gui/menus/menu_arrowleft_normal.tga"/>
+					<GUIAction type="Hide" target="Menu_Help_Page4"/>
+					<GUIAction type="Show" target="Menu_Help_Page3"/>
+				</OnClick>
+			</Button>
+
+			<Button name="Menu_Help_NextPageButton" origin="600 80" sizeX="160" sizeY="160">
+				<RenderObject2D texture="data/textures/gui/menus/menu_arrowright_normal.tga"/>
+				<ButtonText text="Next" alignH="left" font="data/textures/fonts/generic_normal_25" textColor="ffbb9f7d"/>
+				<OnHover>
+					<RenderObject2D texture="data/textures/gui/menus/menu_arrowright_hover.tga"/>
+				</OnHover>
+				<OnClick>
+					<RenderObject2D texture="data/textures/gui/menus/menu_arrowright_normal.tga"/>
+					<GUIAction type="Hide" target="Menu_Help_Page4"/>
+					<GUIAction type="Show" target="Menu_Help_Page5"/>
+				</OnClick>
+			</Button>
+		</Movie>
+
+		<Movie name="Menu_Help_Page5" origin="0 -80" sizeX="1" sizeY="1" file="data/movies/help_page5.ogv" fps="0" hidden="true">
+			<StaticText text="GO CODES" origin="0 360" alignH="center" font="data/textures/fonts/generic_normal_38" textColor="ffe9cba8"/>
+
+			<Item origin="-380 290">
+				<StaticText text="Go Codes are used for synchronization between troopers." origin="0 0" alignH="left" font="data/textures/fonts/generic_normal_19" textColor="ffe9cba8"/>
+				<StaticText text="You can use 4 types of GoCodes or chain more of the same type on a single path." origin="0 -20" alignH="left" font="data/textures/fonts/generic_normal_19" textColor="ffe9cba8"/>
+				<StaticText text="You can also synchronize actions, like door breaches." origin="0 -40" alignH="left" font="data/textures/fonts/generic_normal_19" textColor="ffe9cba8"/>
+			</Item>
+
+			<Button name="Menu_Help_PrevPageButton" origin="-600 80" sizeX="160" sizeY="160">
+				<RenderObject2D texture="data/textures/gui/menus/menu_arrowleft_normal.tga"/>
+				<ButtonText text="Prev" alignH="right" font="data/textures/fonts/generic_normal_25" textColor="ffbb9f7d"/>
+				<OnHover>
+					<RenderObject2D texture="data/textures/gui/menus/menu_arrowleft_hover.tga"/>
+				</OnHover>
+				<OnClick>
+					<RenderObject2D texture="data/textures/gui/menus/menu_arrowleft_normal.tga"/>
+					<GUIAction type="Hide" target="Menu_Help_Page5"/>
+					<GUIAction type="Show" target="Menu_Help_Page4"/>
+				</OnClick>
+			</Button>
+
+			<Button name="Menu_Help_NextPageButton" origin="600 80" sizeX="160" sizeY="160">
+				<RenderObject2D texture="data/textures/gui/menus/menu_arrowright_normal.tga"/>
+				<ButtonText text="Next" alignH="left" font="data/textures/fonts/generic_normal_25" textColor="ffbb9f7d"/>
+				<OnHover>
+					<RenderObject2D texture="data/textures/gui/menus/menu_arrowright_hover.tga"/>
+				</OnHover>
+				<OnClick>
+					<RenderObject2D texture="data/textures/gui/menus/menu_arrowright_normal.tga"/>
+					<GUIAction type="Hide" target="Menu_Help_Page5"/>
+					<GUIAction type="Show" target="Menu_Help_Page6"/>
+				</OnClick>
+			</Button>
+		</Movie>
+
+		<Movie name="Menu_Help_Page6" origin="0 -80" sizeX="1" sizeY="1" file="data/movies/help_page6.ogv" fps="0" hidden="true">
+			<StaticText text="USING COVER" origin="0 360" alignH="center" font="data/textures/fonts/generic_normal_38" textColor="ffe9cba8"/>
+
+			<Item origin="-380 290">
+				<StaticText text="Cover objects stop 50%% of incoming bullets." origin="0 0" alignH="left" font="data/textures/fonts/generic_normal_19" textColor="ffe9cba8"/>
+				<StaticText text="The icon indicates the cover direction." origin="0 -20" alignH="left" font="data/textures/fonts/generic_normal_19" textColor="ffe9cba8"/>
+			</Item>
+
+			<Button name="Menu_Help_PrevPageButton" origin="-600 80" sizeX="160" sizeY="160">
+				<RenderObject2D texture="data/textures/gui/menus/menu_arrowleft_normal.tga"/>
+				<ButtonText text="Prev" alignH="right" font="data/textures/fonts/generic_normal_25" textColor="ffbb9f7d"/>
+				<OnHover>
+					<RenderObject2D texture="data/textures/gui/menus/menu_arrowleft_hover.tga"/>
+				</OnHover>
+				<OnClick>
+					<RenderObject2D texture="data/textures/gui/menus/menu_arrowleft_normal.tga"/>
+					<GUIAction type="Hide" target="Menu_Help_Page6"/>
+					<GUIAction type="Show" target="Menu_Help_Page5"/>
+				</OnClick>
+			</Button>
+
+			<Button name="Menu_Help_NextPageButton" origin="600 80" sizeX="160" sizeY="160">
+				<RenderObject2D texture="data/textures/gui/menus/menu_arrowright_normal.tga"/>
+				<ButtonText text="Next" alignH="left" font="data/textures/fonts/generic_normal_25" textColor="ffbb9f7d"/>
+				<OnHover>
+					<RenderObject2D texture="data/textures/gui/menus/menu_arrowright_hover.tga"/>
+				</OnHover>
+				<OnClick>
+					<RenderObject2D texture="data/textures/gui/menus/menu_arrowright_normal.tga"/>
+					<GUIAction type="Hide" target="Menu_Help_Page6"/>
+					<GUIAction type="Show" target="Menu_Help_Page7"/>
+				</OnClick>
+			</Button>
+		</Movie>
+
+		<Movie name="Menu_Help_Page7" origin="0 -80" sizeX="1" sizeY="1" file="data/movies/help_page7.ogv" fps="0" hidden="true">
+			<StaticText text="OTHER INTERACTIONS" origin="0 360" alignH="center" font="data/textures/fonts/generic_normal_38" textColor="ffe9cba8"/>
+
+			<Item origin="-380 290">
+				<StaticText text="Using the same waypoint controls, you can:" origin="0 0" alignH="left" font="data/textures/fonts/generic_normal_19" textColor="ffe9cba8"/>
+				<StaticText text="- retrieve evidence" origin="0 -20" alignH="left" font="data/textures/fonts/generic_normal_19" textColor="ffe9cba8"/>
+				<StaticText text="- defuse time-bombs" origin="0 -40" alignH="left" font="data/textures/fonts/generic_normal_19" textColor="ffe9cba8"/>
+				<StaticText text="- arrest enemies" origin="0 -60" alignH="left" font="data/textures/fonts/generic_normal_19" textColor="ffe9cba8"/>
+				<StaticText text="- rescue hostages" origin="0 -80" alignH="left" font="data/textures/fonts/generic_normal_19" textColor="ffe9cba8"/>
+			</Item>
+
+			<Button name="Menu_Help_PrevPageButton" origin="-600 80" sizeX="160" sizeY="160">
+				<RenderObject2D texture="data/textures/gui/menus/menu_arrowleft_normal.tga"/>
+				<ButtonText text="Prev" alignH="right" font="data/textures/fonts/generic_normal_25" textColor="ffbb9f7d"/>
+				<OnHover>
+					<RenderObject2D texture="data/textures/gui/menus/menu_arrowleft_hover.tga"/>
+				</OnHover>
+				<OnClick>
+					<RenderObject2D texture="data/textures/gui/menus/menu_arrowleft_normal.tga"/>
+					<GUIAction type="Hide" target="Menu_Help_Page7"/>
+					<GUIAction type="Show" target="Menu_Help_Page6"/>
+				</OnClick>
+			</Button>
+
+			<Button name="Menu_Help_NextPageButton" origin="600 80" sizeX="160" sizeY="160">
+				<RenderObject2D texture="data/textures/gui/menus/menu_arrowright_normal.tga"/>
+				<ButtonText text="Next" alignH="left" font="data/textures/fonts/generic_normal_25" textColor="ffbb9f7d"/>
+				<OnHover>
+					<RenderObject2D texture="data/textures/gui/menus/menu_arrowright_hover.tga"/>
+				</OnHover>
+				<OnClick>
+					<RenderObject2D texture="data/textures/gui/menus/menu_arrowright_normal.tga"/>
+					<GUIAction type="Hide" target="Menu_Help_Page7"/>
+					<GUIAction type="Show" target="Menu_Help_Page8"/>
+				</OnClick>
+			</Button>
+		</Movie>
+
+		<Movie name="Menu_Help_Page8" origin="0 -80" sizeX="1" sizeY="1" file="data/movies/help_page8.ogv" fps="0" hidden="true">
+			<StaticText text="SNIPERS" origin="0 360" alignH="center" font="data/textures/fonts/generic_normal_38" textColor="ffe9cba8"/>
+
+			<Item origin="-380 290">
+				<StaticText text="Change targets by dragging/dropping the crosshair (or press TAB)." origin="0 0" alignH="left" font="data/textures/fonts/generic_normal_19" textColor="ffe9cba8"/>
+				<StaticText text="Fire by using the HUD Fire button (or press S)." origin="0 -20" alignH="left" font="data/textures/fonts/generic_normal_19" textColor="ffe9cba8"/>
+				<StaticText text="Pick your targets carefully, since enemies will hide after the first shot." origin="0 -40" alignH="left" font="data/textures/fonts/generic_normal_19" textColor="ffe9cba8"/>
+			</Item>
+
+			<Button name="Menu_Help_PrevPageButton" origin="-600 80" sizeX="160" sizeY="160">
+				<RenderObject2D texture="data/textures/gui/menus/menu_arrowleft_normal.tga"/>
+				<ButtonText text="Prev" alignH="right" font="data/textures/fonts/generic_normal_25" textColor="ffbb9f7d"/>
+				<OnHover>
+					<RenderObject2D texture="data/textures/gui/menus/menu_arrowleft_hover.tga"/>
+				</OnHover>
+				<OnClick>
+					<RenderObject2D texture="data/textures/gui/menus/menu_arrowleft_normal.tga"/>
+					<GUIAction type="Hide" target="Menu_Help_Page8"/>
+					<GUIAction type="Show" target="Menu_Help_Page7"/>
+				</OnClick>
+			</Button>
+		</Movie>
+	</StaticImage>
+</Item>
+
+<!-- used as a standard information message box -->
+<StaticImage name="#MessageBox_OK" origin="960 540" hidden="true">
+	<OnOpen>
+		<GUIAction type="TriggerEvent" target="GUI_CAPTURE_INPUT"/>
+		<GUIAction type="SetForeground" target="#MessageBox_OK"/>
+	</OnOpen>
+
+	<OnClose>
+		<GUIAction type="TriggerEvent" target="GUI_RELEASE_INPUT"/>
+	</OnClose>
+
+	<OnKeyDown rangeStart="0x1B" rangeEnd="0x1B">
+		<GUIAction type="Hide" target="#MessageBox_OK"/>
+	</OnKeyDown>
+
+	<RenderObject2D texture="data/textures/gui/menus/menu_pause_black.tga" sizeX="1920" sizeY="1080"/>
+
+	<StaticImage>
+		<RenderObject2D texture="data/textures/gui/menus/menu_dropdownbox.tga"/>
+
+			<StaticText name="#Caption" origin="20 120" text="" alignH="left" font="data/textures/fonts/generic_normal_25" textColor="ff008aff" hidden="false"/>
+			<StaticText name="#TextLine1" origin="0 60" text="" alignH="center" font="data/textures/fonts/generic_normal_25" textColor="ffbb9f7d" hidden="false"/>
+			<StaticText name="#TextLine2" origin="0 25" text="" alignH="center" font="data/textures/fonts/generic_normal_25" textColor="ffbb9f7d" hidden="false"/>
+			<StaticText name="#TextLine3" origin="0 -10" text="" alignH="center" font="data/textures/fonts/generic_normal_25" textColor="ffbb9f7d" hidden="false"/>
+
+			<Button origin="0 -85">
+				<RenderObject2D texture="data/textures/gui/menus/menu_button02_normal.tga"/>
+				<ButtonText text="OK" font="data/textures/fonts/generic_normal_25" textColor="ffbb9f7d"/>
+				<OnHover>
+					<RenderObject2D texture="data/textures/gui/menus/menu_button02_hover.tga"/>
+					<ButtonText text="OK" font="data/textures/fonts/generic_normal_25" textColor="ffffffff"/>
+				</OnHover>
+				<OnClick>
+					<RenderObject2D texture="data/textures/gui/menus/menu_button02_normal.tga"/>
+					<GUIAction type="Hide" target="#MessageBox_OK"/>
+				</OnClick>
+			</Button>
+	</StaticImage>
+</StaticImage>
+
+<StaticImage name="#MessageBox_YesNo" origin="960 540" hidden="true">
+	<OnOpen>
+		<GUIAction type="TriggerEvent" target="GUI_CAPTURE_INPUT"/>
+		<GUIAction type="SetForeground" target="#MessageBox_YesNo"/>
+	</OnOpen>
+
+	<OnClose>
+		<GUIAction type="TriggerEvent" target="GUI_RELEASE_INPUT"/>
+	</OnClose>
+
+	<OnKeyDown rangeStart="0x1B" rangeEnd="0x1B">
+		<GUIAction type="Hide" target="#MessageBox_YesNo"/>
+	</OnKeyDown>
+
+	<RenderObject2D texture="data/textures/gui/menus/menu_pause_black.tga" sizeX="1920" sizeY="1080"/>
+
+	<StaticImage>
+		<RenderObject2D texture="data/textures/gui/menus/menu_dropdownbox.tga"/>
+
+			<StaticText name="#Caption" origin="20 120" text="" alignH="left" font="data/textures/fonts/generic_normal_25" textColor="ff008aff" hidden="false"/>
+			<StaticText name="#TextLine1" origin="0 60" text="" alignH="center" font="data/textures/fonts/generic_normal_25" textColor="ffbb9f7d" hidden="false"/>
+			<StaticText name="#TextLine2" origin="0 25" text="" alignH="center" font="data/textures/fonts/generic_normal_25" textColor="ffbb9f7d" hidden="false"/>
+
+			<Button origin="90 -65">
+				<RenderObject2D texture="data/textures/gui/menus/menu_button02_normal.tga"/>
+				<ButtonText text="No" font="data/textures/fonts/generic_normal_25" textColor="ffbb9f7d"/>
+				<OnHover>
+					<RenderObject2D texture="data/textures/gui/menus/menu_button02_hover.tga"/>
+					<ButtonText text="No" font="data/textures/fonts/generic_normal_25" textColor="ffffffff"/>
+				</OnHover>
+				<OnClick>
+					<RenderObject2D texture="data/textures/gui/menus/menu_button02_normal.tga"/>
+					<GUIAction type="Hide" target="#MessageBox_YesNo"/>
+				</OnClick>
+			</Button>
+
+			<Button origin="-90 -65">
+				<RenderObject2D texture="data/textures/gui/menus/menu_button02_normal.tga"/>
+				<ButtonText text="Yes" font="data/textures/fonts/generic_normal_25" textColor="ffbb9f7d"/>
+				<OnHover>
+					<RenderObject2D texture="data/textures/gui/menus/menu_button02_hover.tga"/>
+					<ButtonText text="Yes" font="data/textures/fonts/generic_normal_25" textColor="ffffffff"/>
+				</OnHover>
+				<OnClick>
+					<RenderObject2D texture="data/textures/gui/menus/menu_button02_normal.tga"/>
+					<GUIAction type="Hide" target="#MessageBox_YesNo"/>
+					<GUIAction type="TriggerEvent" target="GUI_GAME_MESSAGEBOX_YES"/>
+				</OnClick>
+			</Button>
+	</StaticImage>
+</StaticImage>
+
+<StaticImage name="#MessageBox_ResolutionChanged_Restart" origin="960 540" hidden="true">
+	<OnOpen>
+		<GUIAction type="TriggerEvent" target="GUI_CAPTURE_INPUT"/>
+		<GUIAction type="SetForeground" target="#MessageBox_ResolutionChanged_Restart"/>
+	</OnOpen>
+
+	<OnClose>
+		<GUIAction type="TriggerEvent" target="GUI_RELEASE_INPUT"/>
+	</OnClose>
+
+	<OnKeyDown rangeStart="0x1B" rangeEnd="0x1B">
+		<GUIAction type="Hide" target="#MessageBox_ResolutionChanged_Restart"/>
+	</OnKeyDown>
+
+	<RenderObject2D texture="data/textures/gui/menus/menu_pause_black.tga" sizeX="1920" sizeY="1080"/>
+
+	<StaticImage>
+		<RenderObject2D texture="data/textures/gui/menus/menu_dropdownbox.tga"/>
+
+			<StaticText origin="20 120" text="Restart needed" alignH="left" font="data/textures/fonts/generic_normal_25" textColor="ff008aff" hidden="false"/>
+			<StaticText origin="0 60" text="You need to restart the game" alignH="center" font="data/textures/fonts/generic_normal_25" textColor="ffbb9f7d" hidden="false"/>
+			<StaticText origin="0 25" text="in order to apply the resolution changes." alignH="center" font="data/textures/fonts/generic_normal_25" textColor="ffbb9f7d" hidden="false"/>
+
+			<Button origin="-90 -85">
+				<RenderObject2D texture="data/textures/gui/menus/menu_button02_normal.tga" scaleX="1.2"/>
+				<ButtonText text="Restart now?" font="data/textures/fonts/generic_normal_25" textColor="ffbb9f7d"/>
+				<OnHover>
+					<RenderObject2D texture="data/textures/gui/menus/menu_button02_hover.tga" scaleX="1.2"/>
+					<ButtonText text="Restart now?" font="data/textures/fonts/generic_normal_25" textColor="ffffffff"/>
+				</OnHover>
+				<OnClick>
+					<RenderObject2D texture="data/textures/gui/menus/menu_button02_normal.tga" scaleX="1.2"/>
+					<GUIAction type="Hide" target="#MessageBox_ResolutionChanged_Restart"/>
+					<GUIAction type="TriggerEvent" target="GUI_GAME_RESTART_APPLICATION"/>
+				</OnClick>
+			</Button>
+
+			<Button origin="90 -85">
+				<RenderObject2D texture="data/textures/gui/menus/menu_button02_normal.tga" scaleX="1.2"/>
+				<ButtonText text="Later" font="data/textures/fonts/generic_normal_25" textColor="ffbb9f7d"/>
+				<OnHover>
+					<RenderObject2D texture="data/textures/gui/menus/menu_button02_hover.tga" scaleX="1.2"/>
+					<ButtonText text="Later" font="data/textures/fonts/generic_normal_25" textColor="ffffffff"/>
+				</OnHover>
+				<OnClick>
+					<RenderObject2D texture="data/textures/gui/menus/menu_button02_normal.tga" scaleX="1.2"/>
+					<GUIAction type="Hide" target="#MessageBox_ResolutionChanged_Restart"/>
+				</OnClick>
+			</Button>
+	</StaticImage>
+</StaticImage>
+
